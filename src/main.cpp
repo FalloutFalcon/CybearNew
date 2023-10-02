@@ -1,9 +1,5 @@
 #include "main.h"
-
-#define FRONT_LEFT_WHEEL_PORT 1
-#define BACK_LEFT_WHEEL_PORT 4
-#define FRONT_RIGHT_WHEEL_PORT 2
-#define BACK_RIGHT_WHEEL_PORT 3
+#include "robot.hpp"
 
 using namespace okapi;
 
@@ -81,91 +77,116 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Motor front_left_wheel(FRONT_LEFT_WHEEL_PORT);
-  	pros::Motor back_left_wheel(BACK_LEFT_WHEEL_PORT);
-	pros::Motor front_right_wheel(FRONT_RIGHT_WHEEL_PORT);
-  	pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
-  	pros::Controller master (CONTROLLER_MASTER);
-	while(true) {
+    pros::Motor front_left_wheel(FRONT_LEFT_WHEEL_PORT);
+    pros::Motor back_left_wheel(BACK_LEFT_WHEEL_PORT);
+    pros::Motor front_right_wheel(FRONT_RIGHT_WHEEL_PORT);
+    pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
+    pros::Controller master(CONTROLLER_MASTER);
 
-		int power  = master.get_analog(ANALOG_LEFT_Y);
-		int strafe = master.get_analog(ANALOG_RIGHT_X);
+    while (true) {
+        int power = master.get_analog(ANALOG_LEFT_Y);
+        int strafe = master.get_analog(ANALOG_RIGHT_X);
 
+		// Used to set the power of motors
+        int FL = 0;
+        int BL = 0;
+        int FR = 0;
+        int BR = 0;
+		
+		// Used to check digital button states
+		bool L1 = master.get_digital(DIGITAL_L1);
+        bool R1 = master.get_digital(DIGITAL_R1);
+        bool L2 = master.get_digital(DIGITAL_L2);
+        bool R2 = master.get_digital(DIGITAL_R2);
 
-	   	int FL = 0; 
-   		int BL = 0;
-   		int FR = 0;
-   		int BR = 0;
+        // Function to set motor values based on joystick input
+        setMotors(power, strafe, FL, BL, FR, BR);
 
-		if (abs (power) > .2 & abs (strafe) > .2) {
-			int move = abs (power) + abs (strafe);
-			if (power > 0 & strafe > 0) {
-				FL = move;
-				BR = move * -1;
-				
-			}
-			else if (power > 0 & strafe < 0) {
-				BL = move;
-   				FR = move * -1;
+        // Function to set motor values based on digital button presses
+        setMotorsFromDigitalButtons(L1, R2, L2, R2, FL, BL, FR, BR);
 
-			}
-			else if (power < 0 & strafe < 0) {
-				FL = move * -1;
-				BR = move;
-
-			}
-			else if (power < 0 & strafe > 0) {
-				BL = move * -1;
-   				FR = move;
-			}
-		}
-		else if (master.get_digital(DIGITAL_L1)) {
-			FL = -100;
-   			BL = -100;
-   			FR = -100;
-   			BR = -100;
-    	}
-    	else if (master.get_digital(DIGITAL_R1)) {
-			FL = 100;
-   			BL = 100;
-   			FR = 100;
-   			BR = 100;
-    	}
-		else if (master.get_digital(DIGITAL_L2)) {
-			FL = -50;
-   			BL = -50;
-   			FR = -50;
-   			BR = -50;
-    	}
-    	else if (master.get_digital(DIGITAL_R2)) {
-			FL = 50;
-   			BL = 50;
-   			FR = 50;
-   			BR = 50;
-    	}
-		else if (abs (power) > .2) {
-			FL = power; 
-   			BL = power;
-   			FR = power * -1;
-   			BR = power * -1;
-        }
-		else if (abs (strafe) > .2) {
-			FL = strafe; 
-   			BL = strafe * -1;
-   			FR = strafe;
-   			BR = strafe * -1;
+        // Set motor values based on individual axes if not already set
+        if (FL == 0 && BL == 0 && FR == 0 && BR == 0) {
+            setMotorsFromAxes(power, strafe, FL, BL, FR, BR);
         }
 
-   		front_left_wheel.move(FL);
-   		back_left_wheel.move(BL);
-   		front_right_wheel.move(FR);
-   		back_right_wheel.move(BR);
+        // Move motors
+        front_left_wheel.move(FL);
+        back_left_wheel.move(BL);
+        front_right_wheel.move(FR);
+        back_right_wheel.move(BR);
 
-		std::cout << FL;
-		int FLVolt = front_left_wheel.get_voltage();
-		int FLTemp = front_left_wheel.get_temperature();
-		pros::lcd::print(1, "FL code:%d volt:%d temp:%d", FL, FLVolt, FLTemp ); 
+        // Output debugging information
+        std::cout << FL;
+        int FLVolt = front_left_wheel.get_voltage();
+        int FLTemp = front_left_wheel.get_temperature();
+        pros::lcd::print(1, "FL code:%d volt:%d temp:%d", FL, FLVolt, FLTemp);
+    }
+}
 
-	}
+// Function to set motor values based on joystick input
+void setMotors(int power, int strafe, int &FL, int &BL, int &FR, int &BR) {
+    if (abs(power) > 0.2 && abs(strafe) > 0.2) {
+        int move = abs(power) + abs(strafe);
+        if (power > 0 && strafe > 0) {
+            FL = move;
+            BR = -move;
+        }
+        else if (power > 0 && strafe < 0) {
+            BL = move;
+            FR = -move;
+        }
+        else if (power < 0 && strafe < 0) {
+            FL = -move;
+            BR = move;
+        }
+        else if (power < 0 && strafe > 0) {
+            BL = -move;
+            FR = move;
+        }
+    }
+}
 
+// Function to set motor values based on digital button presses
+void setMotorsFromDigitalButtons(bool L1, bool R1, bool L2, bool R2, int &FL, int &BL, int &FR, int &BR) {
+    if (L1) {
+        FL = -100;
+        BL = -100;
+        FR = -100;
+        BR = -100;
+    }
+    else if (R1) {
+        FL = 100;
+        BL = 100;
+        FR = 100;
+        BR = 100;
+    }
+    else if (L2) {
+        FL = -50;
+        BL = -50;
+        FR = -50;
+        BR = -50;
+    }
+    else if (R2) {
+        FL = 50;
+        BL = 50;
+        FR = 50;
+        BR = 50;
+    }
+}
+
+// Function to set motor values based on individual axes
+void setMotorsFromAxes(int power, int strafe, int &FL, int &BL, int &FR, int &BR) {
+    if (abs(power) > 0.2) {
+        FL = power;
+        BL = power;
+        FR = -power;
+        BR = -power;
+    }
+    else if (abs(strafe) > 0.2) {
+        FL = strafe;
+        BL = -strafe;
+        FR = strafe;
+        BR = -strafe;
+    }
 }

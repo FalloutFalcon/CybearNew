@@ -7,12 +7,14 @@
  * "I was pressed!" and nothing.
  */
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
+	if (debugMode == false) {
+        pros::lcd::clear_line(2);
+		pros::lcd::set_text(2, "Debug Mode Enabled");
+        debugMode = true;
 	} else {
 		pros::lcd::clear_line(2);
+        pros::lcd::set_text(2, "Debug Mode Disabled");
+        debugMode = false;
 	}
 }
 
@@ -24,7 +26,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	pros::lcd::set_text(1, "9263A");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -45,7 +47,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+    debugMode = false;
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -58,7 +62,20 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+    if (debugMode == true) {
+        moveFor(1000, U'↑');
+        moveFor(1000, U'↓');
+        moveFor(1000, U'←');
+        moveFor(1000, U'→');
+        moveFor(1000, U'↖');
+        moveFor(1000, U'↙');
+        moveFor(1000, U'↗');
+        moveFor(1000, U'↘');
+    }
+    
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -113,10 +130,20 @@ void opcontrol() {
         back_right_wheel.move(backRightPower);
 
         // Output debugging information
-        std::cout << frontLeftPower;
-        int FLVolt = front_left_wheel.get_voltage();
-        int FLTemp = front_left_wheel.get_temperature();
-        pros::lcd::print(1, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
+        if(debugMode == true) {
+            int FLVolt = front_left_wheel.get_voltage();
+            int FLTemp = front_left_wheel.get_temperature();
+            pros::lcd::print(3, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
+            int BLVolt = back_left_wheel.get_voltage();
+            int BLTemp = back_left_wheel.get_temperature();
+            pros::lcd::print(4, "BL code:%d volt:%d temp:%d", backLeftPower, BLVolt, BLTemp);
+            int FRVolt = front_right_wheel.get_voltage();
+            int FRTemp = front_right_wheel.get_temperature();
+            pros::lcd::print(5, "FR code:%d volt:%d temp:%d", frontRightPower, FRVolt, FRTemp);
+            int BRVolt = back_right_wheel.get_voltage();
+            int BRTemp = back_right_wheel.get_temperature();
+            pros::lcd::print(6, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
+        }
     }
 }
 
@@ -185,4 +212,86 @@ void setMotorsFromAxes(int power, int strafe) {
         frontRightPower = strafe;
         backRightPower = -strafe;
     }
+}
+
+#include "main.h"
+
+void moveFor(int time, char32_t direction) {
+    int frontLeftPower = 0;
+    int backLeftPower = 0;
+    int frontRightPower = 0;
+    int backRightPower = 0;
+
+    switch (direction) {
+        case U'↑': // Move forward
+            frontLeftPower = 100;
+            backLeftPower = 100;
+            frontRightPower = -100;
+            backRightPower = -100;
+            break;
+        case U'↓': // Move backward
+            frontLeftPower = -100;
+            backLeftPower = -100;
+            frontRightPower = 100;
+            backRightPower = 100;
+            break;
+        case U'←': // Move left
+            frontLeftPower = -100;
+            backLeftPower = 100;
+            frontRightPower = -100;
+            backRightPower = 100;
+            break;
+        case U'→': // Move right
+            frontLeftPower = 100;
+            backLeftPower = -100;
+            frontRightPower = 100;
+            backRightPower = -100;
+            break;
+        case U'↖': // Move diagonally up and left
+            frontLeftPower = 0;
+            backLeftPower = 100;
+            frontRightPower = -100;
+            backRightPower = 0;
+            break;
+        case U'↙': // Move diagonally down and left
+            frontLeftPower = -100;
+            backLeftPower = 0;
+            frontRightPower = 0;
+            backRightPower = -100;
+            break;
+        case U'↗': // Move diagonally up and right
+            frontLeftPower = 100;
+            backLeftPower = 0;
+            frontRightPower = 0;
+            backRightPower = 100;
+            break;
+        case U'↘': // Move diagonally down and right
+            frontLeftPower = 0;
+            backLeftPower = -100;
+            frontRightPower = 100;
+            backRightPower = 0;
+            break;
+        default:
+            break;
+    }
+
+    // Set motor values
+    pros::Motor frontLeftMotor(FRONT_LEFT_WHEEL_PORT);
+    pros::Motor backLeftMotor(BACK_LEFT_WHEEL_PORT);
+    pros::Motor frontRightMotor(FRONT_RIGHT_WHEEL_PORT);
+    pros::Motor backRightMotor(BACK_RIGHT_WHEEL_PORT);
+
+    frontLeftMotor.move(frontLeftPower);
+    backLeftMotor.move(backLeftPower);
+    frontRightMotor.move(frontRightPower);
+    backRightMotor.move(backRightPower);
+
+    // Wait for specified time
+    pros::delay(time);
+
+    // Stop motors
+    frontLeftMotor.move(0);
+    backLeftMotor.move(0);
+    frontRightMotor.move(0);
+    backRightMotor.move(0);
 }

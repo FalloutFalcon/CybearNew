@@ -11,6 +11,11 @@ const int BACK_LEFT_WHEEL_PORT = 4;
 const int FRONT_RIGHT_WHEEL_PORT = 2;
 const int BACK_RIGHT_WHEEL_PORT = 3;
 
+pros::Motor frontLeftMotor(FRONT_LEFT_WHEEL_PORT);
+pros::Motor backLeftMotor(BACK_LEFT_WHEEL_PORT);
+pros::Motor frontRightMotor(FRONT_RIGHT_WHEEL_PORT);
+pros::Motor backRightMotor(BACK_RIGHT_WHEEL_PORT);
+
 int frontLeftPower = 0;
 int backLeftPower = 0;
 int frontRightPower = 0;
@@ -29,6 +34,7 @@ void setMotorsFromDigitalButtons();
 void setMotorsFromAxes(int power, int strafe);
 
 // Auton
-void moveFor(int time, char32_t direction);
+void moveFor(int time, char32_t direction, int speed = 100);
+void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove);
 
 #endif // ROBOT_HPP_

@@ -63,18 +63,14 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    if (debugMode == true) {
-        moveFor(1000, U'↑');
-        moveFor(1000, U'↓');
-        moveFor(1000, U'←');
-        moveFor(1000, U'→');
-        moveFor(1000, U'↖');
-        moveFor(1000, U'↙');
-        moveFor(1000, U'↗');
-        moveFor(1000, U'↘');
-    }
-    
-
+    moveFor(1000, U'↑');
+    moveFor(1000, U'↓');
+    moveFor(1000, U'←');
+    moveFor(1000, U'→');
+    moveFor(1000, U'↖');
+    moveFor(1000, U'↙');
+    moveFor(1000, U'↗');
+    moveFor(1000, U'↘');
 }
 
 /**
@@ -152,20 +148,16 @@ void setMotors(int power, int strafe) {
     if (abs(power) > 0.2 && abs(strafe) > 0.2) {
         int move = abs(power) + abs(strafe);
         if (power > 0 && strafe > 0) {
-            frontLeftPower = move;
-            backRightPower = -move;
+            setMove(move, 0, 0, -move);
         }
         else if (power > 0 && strafe < 0) {
-            backLeftPower = move;
-            frontRightPower = -move;
+            setMove(0, move, -move, 0);
         }
         else if (power < 0 && strafe < 0) {
-            frontLeftPower = -move;
-            backRightPower = move;
+            setMove(-move, 0, 0, move);
         }
         else if (power < 0 && strafe > 0) {
-            backLeftPower = -move;
-            frontRightPower = move;
+            setMove(0, -move, move, 0);
         }
     }
 }
@@ -173,103 +165,55 @@ void setMotors(int power, int strafe) {
 // Function to set motor values based on digital button presses
 void setMotorsFromDigitalButtons() {
     if (leftButton1) {
-        frontLeftPower = -100;
-        backLeftPower = -100;
-        frontRightPower = -100;
-        backRightPower = -100;
+        setMove(-100, -100, -100, -100);
     }
     else if (rightButton1) {
-        frontLeftPower = 100;
-        backLeftPower = 100;
-        frontRightPower = 100;
-        backRightPower = 100;
+        setMove(100, 100, 100, 100);
     }
     else if (leftButton2) {
-        frontLeftPower = -50;
-        backLeftPower = -50;
-        frontRightPower = -50;
-        backRightPower = -50;
+        setMove(-50, -50, -50, -50);
     }
     else if (rightButton2) {
-        frontLeftPower = 50;
-        backLeftPower = 50;
-        frontRightPower = 50;
-        backRightPower = 50;
+        setMove(50, 50, 50, 50);
     }
 }
 
-// Function to set motor values based on individual axes
 void setMotorsFromAxes(int power, int strafe) {
     if (abs(power) > 0.2) {
-        frontLeftPower = power;
-        backLeftPower = power;
-        frontRightPower = -power;
-        backRightPower = -power;
+        setMove(power, power, -power, -power);
     }
     else if (abs(strafe) > 0.2) {
-        frontLeftPower = strafe;
-        backLeftPower = -strafe;
-        frontRightPower = strafe;
-        backRightPower = -strafe;
+        setMove(strafe, -strafe, strafe, -strafe);
     }
 }
 
 #include "main.h"
 
-void moveFor(int time, char32_t direction) {
-    int frontLeftPower = 0;
-    int backLeftPower = 0;
-    int frontRightPower = 0;
-    int backRightPower = 0;
-
+void moveFor(int time, char32_t direction, int speed) {
     switch (direction) {
         case U'↑': // Move forward
-            frontLeftPower = 100;
-            backLeftPower = 100;
-            frontRightPower = -100;
-            backRightPower = -100;
+            setMove(speed, speed, -speed, -speed);
             break;
         case U'↓': // Move backward
-            frontLeftPower = -100;
-            backLeftPower = -100;
-            frontRightPower = 100;
-            backRightPower = 100;
+            setMove(-speed, -speed, speed, speed);
             break;
         case U'←': // Move left
-            frontLeftPower = -100;
-            backLeftPower = 100;
-            frontRightPower = -100;
-            backRightPower = 100;
+            setMove(-speed, speed, -speed, speed);
             break;
         case U'→': // Move right
-            frontLeftPower = 100;
-            backLeftPower = -100;
-            frontRightPower = 100;
-            backRightPower = -100;
+            setMove(speed, -speed, speed, -speed);
             break;
         case U'↖': // Move diagonally up and left
-            frontLeftPower = 0;
-            backLeftPower = 100;
-            frontRightPower = -100;
-            backRightPower = 0;
+            setMove(0, speed, -speed, 0);
             break;
         case U'↙': // Move diagonally down and left
-            frontLeftPower = -100;
-            backLeftPower = 0;
-            frontRightPower = 0;
-            backRightPower = -100;
+            setMove(-speed, 0, 0, -speed);
             break;
         case U'↗': // Move diagonally up and right
-            frontLeftPower = 100;
-            backLeftPower = 0;
-            frontRightPower = 0;
-            backRightPower = 100;
+            setMove(speed, 0, 0, speed);
             break;
         case U'↘': // Move diagonally down and right
-            frontLeftPower = 0;
-            backLeftPower = -100;
-            frontRightPower = 100;
-            backRightPower = 0;
+            setMove(0, -speed, speed, 0);
             break;
         default:
             break;
@@ -290,8 +234,14 @@ void moveFor(int time, char32_t direction) {
     pros::delay(time);
 
     // Stop motors
-    frontLeftMotor.move(0);
-    backLeftMotor.move(0);
-    frontRightMotor.move(0);
-    backRightMotor.move(0);
+    setMove(0, 0, 0, 0);
 }
+
+// Sets the power varibles to shrink code alot
+void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
+    frontLeftPower = frontLeftMove;
+    backLeftPower = backLeftMove;
+    frontRightPower = frontRightMove;
+    backRightPower = backRightMove;
+}
+

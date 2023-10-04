@@ -71,8 +71,8 @@ void autonomous() {
     moveFor(1000, U'↙',50);
     moveFor(1000, U'↗',50);
     moveFor(1000, U'↘',50);
-    turnFor(1000, U'↺',50);
-    turnFor(1000, U'↻',50);
+    moveFor(1000, U'↺',50);
+    moveFor(1000, U'↻',50);
 }
 
 /**
@@ -98,7 +98,7 @@ void opcontrol() {
         int power = master.get_analog(ANALOG_LEFT_Y);
         int strafe = master.get_analog(ANALOG_RIGHT_X);
 
-		// Used to set the power of motors
+		// Reset the power because it is set in multiple places
 		frontLeftPower = 0;
 		backLeftPower = 0;
 		frontRightPower = 0;
@@ -110,10 +110,8 @@ void opcontrol() {
 		leftButton2 = master.get_digital(DIGITAL_L2);
 		rightButton2 = master.get_digital(DIGITAL_R2);
 
-        // Function to set motor values based on joystick input
-        setMotors(power, strafe);
+        setMotorsFromJoysticks(power, strafe);
 
-        // Function to set motor values based on digital button presses
         setMotorsFromDigitalButtons();
 
         // Set motor values based on individual axes if not already set
@@ -121,8 +119,7 @@ void opcontrol() {
             setMotorsFromAxes(power, strafe);
         }
 
-        // Move motors
-        updateMove();
+        updateMotors();
 
         // Output debugging information
         if(debugMode == true) {
@@ -143,124 +140,113 @@ void opcontrol() {
 }
 
 // Sets the power varibles to shrink code alot
-void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
+void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
     frontLeftPower = frontLeftMove;
     backLeftPower = backLeftMove;
     frontRightPower = frontRightMove;
     backRightPower = backRightMove;
 }
 
-void updateMove() {
+// Updates motors based on the global motor power variables
+void updateMotors() {
     frontLeftMotor.move(frontLeftPower);
     backLeftMotor.move(backLeftPower);
     frontRightMotor.move(frontRightPower);
     backRightMotor.move(backRightPower);
 }
 
-
-// Function to set motor values based on joystick input
-void setMotors(int power, int strafe) {
+// Set motor values based on joystick input
+void setMotorsFromJoysticks(int power, int strafe) {
     if (abs(power) > 0.2 && abs(strafe) > 0.2) {
         int move = abs(power) + abs(strafe);
         if (power > 0 && strafe > 0) {
-            setMove(move, 0, 0, -move);
+            setPowerVar(move, 0, 0, -move);
         }
         else if (power > 0 && strafe < 0) {
-            setMove(0, move, -move, 0);
+            setPowerVar(0, move, -move, 0);
         }
         else if (power < 0 && strafe < 0) {
-            setMove(-move, 0, 0, move);
+            setPowerVar(-move, 0, 0, move);
         }
         else if (power < 0 && strafe > 0) {
-            setMove(0, -move, move, 0);
+            setPowerVar(0, -move, move, 0);
         }
     }
 }
 
-// Function to set motor values based on digital button presses
+// Set motor values based on digital button presses
 void setMotorsFromDigitalButtons() {
     if (leftButton1) {
-        setMove(-100, -100, -100, -100);
+        setPowerVar(-100, -100, -100, -100);
     }
     else if (rightButton1) {
-        setMove(100, 100, 100, 100);
+        setPowerVar(100, 100, 100, 100);
     }
     else if (leftButton2) {
-        setMove(-50, -50, -50, -50);
+        setPowerVar(-50, -50, -50, -50);
     }
     else if (rightButton2) {
-        setMove(50, 50, 50, 50);
+        setPowerVar(50, 50, 50, 50);
     }
 }
 
+// Set motor values based on individual axes
 void setMotorsFromAxes(int power, int strafe) {
     if (abs(power) > 0.2) {
-        setMove(power, power, -power, -power);
+        setPowerVar(power, power, -power, -power);
     }
     else if (abs(strafe) > 0.2) {
-        setMove(strafe, -strafe, strafe, -strafe);
+        setPowerVar(strafe, -strafe, strafe, -strafe);
     }
 }
 
-void moveFor(int time, string direction, int speed) {
+// Uses unicode to set the PowerVars to move in a direction
+void moveDir(char32_t direction, int speed) {
     switch (direction) {
-        case "left": // Move forward
-            setMove(speed, speed, -speed, -speed);
+        case U'↑': // Move forward
+            setPowerVar(speed, speed, -speed, -speed);
             break;
         case U'↓': // Move backward
-            setMove(-speed, -speed, speed, speed);
+            setPowerVar(-speed, -speed, speed, speed);
             break;
         case U'←': // Move left
-            setMove(-speed, speed, -speed, speed);
+            setPowerVar(-speed, speed, -speed, speed);
             break;
         case U'→': // Move right
-            setMove(speed, -speed, speed, -speed);
+            setPowerVar(speed, -speed, speed, -speed);
             break;
         case U'↖': // Move diagonally up and left
-            setMove(0, speed, -speed, 0);
+            setPowerVar(0, speed, -speed, 0);
             break;
         case U'↙': // Move diagonally down and left
-            setMove(-speed, 0, 0, speed);
+            setPowerVar(-speed, 0, 0, speed);
             break;
         case U'↗': // Move diagonally up and right
-            setMove(speed, 0, 0, -speed);
+            setPowerVar(speed, 0, 0, -speed);
             break;
         case U'↘': // Move diagonally down and right
-            setMove(0, -speed, speed, 0);
+            setPowerVar(0, -speed, speed, 0);
+            break;
+        case U'↺': // Turn left
+            setPowerVar(-speed, -speed, -speed, -speed);
+            break;
+        case U'↻': // Turn right
+            setPowerVar(speed, speed, speed, speed);
             break;
         default:
             break;
     }
+    updateMotors();
+}
 
-    // Set motor values
-    updateMove();
+// Uses moveDir to move in a direction for a specified time
+void moveFor(int time, char32_t direction, int speed) {
+    moveDir(time, direction);
 
     // Wait for specified time
     pros::delay(time);
 
     // Stop motors
-    setMove(0, 0, 0, 0);
-
-    updateMove();
-}
-
-void turnFor(int time, char32_t direction, int speed) {
-    switch (direction) {
-        case U'↺': // Turn left
-            setMove(-speed, -speed, -speed, -speed);
-            break;
-        case U'↻': // Turn right
-            setMove(speed, speed, speed, speed);
-            break;
-        default:
-            break;
-    }
-
-    updateMove();
-
-    pros::delay(time);
-
-    setMove(0, 0, 0, 0);
-
-    updateMove();
+    setPowerVar(0, 0, 0, 0);
+    updateMotors();
 }

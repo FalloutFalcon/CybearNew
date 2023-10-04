@@ -28,15 +28,32 @@ bool rightButton1 = false;
 bool leftButton2 = false;
 bool rightButton2 = false;
 
-// Function prototypes
-void setMotors(int power, int strafe);
+// Drive Functions. Used in both Auton and Driver Control
+
+// Sets the global motor power variables. Doesnt update motors on its own
+void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove);
+// Updates motors based on the global motor power variables. Should be called at the end of anything messing with motors and power varibles
+void updateMotors();
+
+// Driver Control Functions. Reads mostly controller inputs
+
+// Set motor values based on joystick input
+void setMotorsFromJoysticks(int power, int strafe);
+// Set motor values based on digital button presses
 void setMotorsFromDigitalButtons();
+// Set motor values based on individual axes
 void setMotorsFromAxes(int power, int strafe);
 
-// Auton
-void moveFor(int time, string direction = "null", int speed = 50);
-void turnFor(int time, string direction = "null", int speed = 50);
-void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove);
-void updateMove();
+// Auton Control Functions. Related mostly to timing
+
+// Uses moveDir to move in a direction for a specified time. Direction and speed are passed to moveDir. Time is in miliseconds
+void moveFor(int time, char32_t direction, int speed = 50);
+/**
+ * Uses unicode to set the PowerVars to move in a direction with a set speed
+ * \param speed
+ *        Between -127 to 127. Defaults to 50
+**/
+void moveDir(char32_t direction, int speed);
+
 
 #endif // ROBOT_HPP_

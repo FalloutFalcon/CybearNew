@@ -63,14 +63,16 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    moveFor(1000, U'↑');
-    moveFor(1000, U'↓');
-    moveFor(1000, U'←');
-    moveFor(1000, U'→');
-    moveFor(1000, U'↖');
-    moveFor(1000, U'↙');
-    moveFor(1000, U'↗');
-    moveFor(1000, U'↘');
+    moveFor(1000, U'↑',50);
+    moveFor(1000, U'↓',50);
+    moveFor(1000, U'←',50);
+    moveFor(1000, U'→',50);
+    moveFor(1000, U'↖',50);
+    moveFor(1000, U'↙',50);
+    moveFor(1000, U'↗',50);
+    moveFor(1000, U'↘',50);
+    turnFor(1000, U'↺',50);
+    turnFor(1000, U'↻',50);
 }
 
 /**
@@ -120,10 +122,7 @@ void opcontrol() {
         }
 
         // Move motors
-        front_left_wheel.move(frontLeftPower);
-        back_left_wheel.move(backLeftPower);
-        front_right_wheel.move(frontRightPower);
-        back_right_wheel.move(backRightPower);
+        updateMove();
 
         // Output debugging information
         if(debugMode == true) {
@@ -142,6 +141,22 @@ void opcontrol() {
         }
     }
 }
+
+// Sets the power varibles to shrink code alot
+void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
+    frontLeftPower = frontLeftMove;
+    backLeftPower = backLeftMove;
+    frontRightPower = frontRightMove;
+    backRightPower = backRightMove;
+}
+
+void updateMove() {
+    frontLeftMotor.move(frontLeftPower);
+    backLeftMotor.move(backLeftPower);
+    frontRightMotor.move(frontRightPower);
+    backRightMotor.move(backRightPower);
+}
+
 
 // Function to set motor values based on joystick input
 void setMotors(int power, int strafe) {
@@ -187,11 +202,9 @@ void setMotorsFromAxes(int power, int strafe) {
     }
 }
 
-#include "main.h"
-
-void moveFor(int time, char32_t direction, int speed) {
+void moveFor(int time, string direction, int speed) {
     switch (direction) {
-        case U'↑': // Move forward
+        case "left": // Move forward
             setMove(speed, speed, -speed, -speed);
             break;
         case U'↓': // Move backward
@@ -207,10 +220,10 @@ void moveFor(int time, char32_t direction, int speed) {
             setMove(0, speed, -speed, 0);
             break;
         case U'↙': // Move diagonally down and left
-            setMove(-speed, 0, 0, -speed);
+            setMove(-speed, 0, 0, speed);
             break;
         case U'↗': // Move diagonally up and right
-            setMove(speed, 0, 0, speed);
+            setMove(speed, 0, 0, -speed);
             break;
         case U'↘': // Move diagonally down and right
             setMove(0, -speed, speed, 0);
@@ -220,28 +233,34 @@ void moveFor(int time, char32_t direction, int speed) {
     }
 
     // Set motor values
-    pros::Motor frontLeftMotor(FRONT_LEFT_WHEEL_PORT);
-    pros::Motor backLeftMotor(BACK_LEFT_WHEEL_PORT);
-    pros::Motor frontRightMotor(FRONT_RIGHT_WHEEL_PORT);
-    pros::Motor backRightMotor(BACK_RIGHT_WHEEL_PORT);
-
-    frontLeftMotor.move(frontLeftPower);
-    backLeftMotor.move(backLeftPower);
-    frontRightMotor.move(frontRightPower);
-    backRightMotor.move(backRightPower);
+    updateMove();
 
     // Wait for specified time
     pros::delay(time);
 
     // Stop motors
     setMove(0, 0, 0, 0);
+
+    updateMove();
 }
 
-// Sets the power varibles to shrink code alot
-void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
-    frontLeftPower = frontLeftMove;
-    backLeftPower = backLeftMove;
-    frontRightPower = frontRightMove;
-    backRightPower = backRightMove;
-}
+void turnFor(int time, char32_t direction, int speed) {
+    switch (direction) {
+        case U'↺': // Turn left
+            setMove(-speed, -speed, -speed, -speed);
+            break;
+        case U'↻': // Turn right
+            setMove(speed, speed, speed, speed);
+            break;
+        default:
+            break;
+    }
 
+    updateMove();
+
+    pros::delay(time);
+
+    setMove(0, 0, 0, 0);
+
+    updateMove();
+}

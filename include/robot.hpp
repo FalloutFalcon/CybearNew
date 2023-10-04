@@ -34,7 +34,9 @@ void setMotorsFromDigitalButtons();
 void setMotorsFromAxes(int power, int strafe);
 
 // Auton
-void moveFor(int time, char32_t direction, int speed = 100);
+void moveFor(int time, string direction = "null", int speed = 50);
+void turnFor(int time, string direction = "null", int speed = 50);
 void setMove(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove);
+void updateMove();
 
 #endif // ROBOT_HPP_

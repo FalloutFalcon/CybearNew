@@ -54,6 +54,7 @@ void moveFor(int time, char32_t direction, int speed = 50);
  *        Between -127 to 127. Defaults to 50
 **/
 void moveDir(char32_t direction, int speed);
-
+// Stops all motors and clears any loose power variables
+void stopMotors();
 
 #endif // ROBOT_HPP_

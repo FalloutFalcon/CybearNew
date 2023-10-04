@@ -73,6 +73,7 @@ void autonomous() {
     moveFor(1000, U'↘',50);
     moveFor(1000, U'↺',50);
     moveFor(1000, U'↻',50);
+    stopMotors();
 }
 
 /**
@@ -139,7 +140,6 @@ void opcontrol() {
     }
 }
 
-// Sets the power varibles to shrink code alot
 void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
     frontLeftPower = frontLeftMove;
     backLeftPower = backLeftMove;
@@ -147,7 +147,6 @@ void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int ba
     backRightPower = backRightMove;
 }
 
-// Updates motors based on the global motor power variables
 void updateMotors() {
     frontLeftMotor.move(frontLeftPower);
     backLeftMotor.move(backLeftPower);
@@ -155,7 +154,6 @@ void updateMotors() {
     backRightMotor.move(backRightPower);
 }
 
-// Set motor values based on joystick input
 void setMotorsFromJoysticks(int power, int strafe) {
     if (abs(power) > 0.2 && abs(strafe) > 0.2) {
         int move = abs(power) + abs(strafe);
@@ -174,7 +172,6 @@ void setMotorsFromJoysticks(int power, int strafe) {
     }
 }
 
-// Set motor values based on digital button presses
 void setMotorsFromDigitalButtons() {
     if (leftButton1) {
         setPowerVar(-100, -100, -100, -100);
@@ -190,7 +187,6 @@ void setMotorsFromDigitalButtons() {
     }
 }
 
-// Set motor values based on individual axes
 void setMotorsFromAxes(int power, int strafe) {
     if (abs(power) > 0.2) {
         setPowerVar(power, power, -power, -power);
@@ -200,7 +196,6 @@ void setMotorsFromAxes(int power, int strafe) {
     }
 }
 
-// Uses unicode to set the PowerVars to move in a direction
 void moveDir(char32_t direction, int speed) {
     switch (direction) {
         case U'↑': // Move forward
@@ -239,14 +234,15 @@ void moveDir(char32_t direction, int speed) {
     updateMotors();
 }
 
-// Uses moveDir to move in a direction for a specified time
 void moveFor(int time, char32_t direction, int speed) {
     moveDir(time, direction);
 
-    // Wait for specified time
     pros::delay(time);
 
-    // Stop motors
+    stopMotors();
+}
+
+void stopMotors() {
     setPowerVar(0, 0, 0, 0);
     updateMotors();
 }

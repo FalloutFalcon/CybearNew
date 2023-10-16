@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "Main Cybear",
+        "project_name": "Cybear Dev",
         "target": "v5",
         "templates": {
             "kernel": {
@@ -220,6 +220,10 @@
                 "version": "5.0.0"
             }
         },
-        "upload_options": {}
-    }
+        "upload_options": {
+    "description": "Dev Branch",
+    "slot":  3,
+    "icon": "pros"
+        }
+  }
 }

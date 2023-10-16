@@ -5,6 +5,9 @@
 
 bool debugMode = false;
 
+// Multiplication for the drive speed. Useful for creating kid safe versions for demos
+const int DEFAULT_SPEED = 1;
+
 // Constants for motor and controller ports
 const int FRONT_LEFT_WHEEL_PORT = 1;
 const int BACK_LEFT_WHEEL_PORT = 4;

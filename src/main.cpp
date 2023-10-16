@@ -96,8 +96,8 @@ void opcontrol() {
     pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
 
     while (true) {
-        int power = master.get_analog(ANALOG_LEFT_Y);
-        int strafe = master.get_analog(ANALOG_RIGHT_X);
+        int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
+        int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 
 		// Reset the power because it is set in multiple places
 		frontLeftPower = 0;
@@ -236,9 +236,7 @@ void moveDir(char32_t direction, int speed) {
 
 void moveFor(int time, char32_t direction, int speed) {
     moveDir(time, direction);
-
     pros::delay(time);
-
     stopMotors();
 }
 

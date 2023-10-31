@@ -1,4 +1,12 @@
-#include "robot.hpp"
+#include "main.h"
+
+bool debugMode = false;
+bool kidMode = false;
+
+pros::Motor launcher_motor(LAUNCHER_PORT);
+
+pros::Controller master(CONTROLLER_MASTER);
+pros::Controller partner(CONTROLLER_PARTNER);
 
 /**
  * A callback function for LLEMU's center button.
@@ -63,17 +71,19 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    moveFor(1000, U'↑',50);
-    moveFor(1000, U'↓',50);
-    moveFor(1000, U'←',50);
-    moveFor(1000, U'→',50);
-    moveFor(1000, U'↖',50);
-    moveFor(1000, U'↙',50);
-    moveFor(1000, U'↗',50);
-    moveFor(1000, U'↘',50);
-    moveFor(1000, U'↺',50);
-    moveFor(1000, U'↻',50);
-    stopMotors();
+    while (true) {
+        moveFor(1000, NORTH,25);
+        moveFor(1000, SOUTH,25);
+        moveFor(1000, EAST,25);
+        moveFor(1000, WEST,25);
+        moveFor(1000, NORTHWEST,25);
+        moveFor(1000, SOUTHWEST,25);
+        moveFor(1000, NORTHEAST,25);
+        moveFor(1000, NORTHWEST,25);
+        moveFor(1000, TURNLEFT,25);
+        moveFor(1000, TURNRIGHT,25);
+        stopMotors();
+    }
 }
 
 /**
@@ -111,20 +121,8 @@ void opcontrol() {
 
         updateMotors();
 
-        // Output debugging information
         if(debugMode == true) {
-            int FLVolt = front_left_wheel.get_voltage();
-            int FLTemp = front_left_wheel.get_temperature();
-            pros::lcd::print(3, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
-            int BLVolt = back_left_wheel.get_voltage();
-            int BLTemp = back_left_wheel.get_temperature();
-            pros::lcd::print(4, "BL code:%d volt:%d temp:%d", backLeftPower, BLVolt, BLTemp);
-            int FRVolt = front_right_wheel.get_voltage();
-            int FRTemp = front_right_wheel.get_temperature();
-            pros::lcd::print(5, "FR code:%d volt:%d temp:%d", frontRightPower, FRVolt, FRTemp);
-            int BRVolt = back_right_wheel.get_voltage();
-            int BRTemp = back_right_wheel.get_temperature();
-            pros::lcd::print(6, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
+            driveDebug();
         }
 
         if(partner.get_digital(DIGITAL_L1)) {
@@ -137,20 +135,6 @@ void opcontrol() {
             launcher_motor.move(0);
         }
     }
-}
-
-void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
-    frontLeftPower = frontLeftMove;
-    backLeftPower = backLeftMove;
-    frontRightPower = frontRightMove;
-    backRightPower = backRightMove;
-}
-
-void updateMotors() {
-    front_left_wheel.move(frontLeftPower);
-    back_left_wheel.move(backLeftPower);
-    front_right_wheel.move(frontRightPower);
-    back_right_wheel.move(backRightPower);
 }
 
 void setMotorsFromJoysticks(int power, int strafe) {
@@ -193,53 +177,4 @@ void setMotorsFromAxes(int power, int strafe) {
     else if (abs(strafe) > 0.2) {
         setPowerVar(strafe, -strafe, strafe, -strafe);
     }
-}
-
-void moveDir(char32_t direction, int speed) {
-    switch (direction) {
-        case U'↑': // Move forward
-            setPowerVar(speed, speed, -speed, -speed);
-            break;
-        case U'↓': // Move backward
-            setPowerVar(-speed, -speed, speed, speed);
-            break;
-        case U'←': // Move left
-            setPowerVar(-speed, speed, -speed, speed);
-            break;
-        case U'→': // Move right
-            setPowerVar(speed, -speed, speed, -speed);
-            break;
-        case U'↖': // Move diagonally up and left
-            setPowerVar(0, speed, -speed, 0);
-            break;
-        case U'↙': // Move diagonally down and left
-            setPowerVar(-speed, 0, 0, speed);
-            break;
-        case U'↗': // Move diagonally up and right
-            setPowerVar(speed, 0, 0, -speed);
-            break;
-        case U'↘': // Move diagonally down and right
-            setPowerVar(0, -speed, speed, 0);
-            break;
-        case U'↺': // Turn left
-            setPowerVar(-speed, -speed, -speed, -speed);
-            break;
-        case U'↻': // Turn right
-            setPowerVar(speed, speed, speed, speed);
-            break;
-        default:
-            break;
-    }
-    updateMotors();
-}
-
-void moveFor(int time, char32_t direction, int speed) {
-    moveDir(time, direction);
-    pros::delay(time);
-    stopMotors();
-}
-
-void stopMotors() {
-    setPowerVar(0, 0, 0, 0);
-    updateMotors();
 }

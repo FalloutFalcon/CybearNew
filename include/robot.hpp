@@ -4,6 +4,7 @@
 #include "main.h"
 
 bool debugMode = false;
+bool kidMode = false;
 
 // Multiplication for the drive speed. Useful for creating kid safe versions for demos
 const int DEFAULT_SPEED = 1;
@@ -13,11 +14,13 @@ const int FRONT_LEFT_WHEEL_PORT = 1;
 const int BACK_LEFT_WHEEL_PORT = 4;
 const int FRONT_RIGHT_WHEEL_PORT = 2;
 const int BACK_RIGHT_WHEEL_PORT = 3;
+const int LAUNCHER_PORT = 5;
 
-pros::Motor frontLeftMotor(FRONT_LEFT_WHEEL_PORT);
-pros::Motor backLeftMotor(BACK_LEFT_WHEEL_PORT);
-pros::Motor frontRightMotor(FRONT_RIGHT_WHEEL_PORT);
-pros::Motor backRightMotor(BACK_RIGHT_WHEEL_PORT);
+pros::Motor front_left_wheel(FRONT_LEFT_WHEEL_PORT);
+pros::Motor back_left_wheel(BACK_LEFT_WHEEL_PORT);
+pros::Motor front_right_wheel(FRONT_RIGHT_WHEEL_PORT);
+pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
+pros::Motor launcher_motor(LAUNCHER_PORT);
 
 int frontLeftPower = 0;
 int backLeftPower = 0;
@@ -25,11 +28,7 @@ int frontRightPower = 0;
 int backRightPower = 0;
 
 pros::Controller master(CONTROLLER_MASTER);
-
-bool leftButton1 = false;
-bool rightButton1 = false;
-bool leftButton2 = false;
-bool rightButton2 = false;
+pros::Controller partner(CONTROLLER_PARTNER);
 
 // Drive Functions. Used in both Auton and Driver Control
 

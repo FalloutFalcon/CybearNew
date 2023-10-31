@@ -90,11 +90,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    pros::Motor front_left_wheel(FRONT_LEFT_WHEEL_PORT);
-    pros::Motor back_left_wheel(BACK_LEFT_WHEEL_PORT);
-    pros::Motor front_right_wheel(FRONT_RIGHT_WHEEL_PORT);
-    pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
-
     while (true) {
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
@@ -105,12 +100,6 @@ void opcontrol() {
 		frontRightPower = 0;
 		backRightPower = 0;
 			
-		// Used to check digital button states
-		leftButton1 = master.get_digital(DIGITAL_L1);
-		rightButton1 = master.get_digital(DIGITAL_R1);
-		leftButton2 = master.get_digital(DIGITAL_L2);
-		rightButton2 = master.get_digital(DIGITAL_R2);
-
         setMotorsFromJoysticks(power, strafe);
 
         setMotorsFromDigitalButtons();
@@ -137,6 +126,16 @@ void opcontrol() {
             int BRTemp = back_right_wheel.get_temperature();
             pros::lcd::print(6, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
         }
+
+        if(partner.get_digital(DIGITAL_L1)) {
+            launcher_motor.move(50);
+        } 
+        else if (partner.get_digital(DIGITAL_L2)) {
+            launcher_motor.move(-50);
+        }
+        else {
+            launcher_motor.move(0);
+        }
     }
 }
 
@@ -148,10 +147,10 @@ void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int ba
 }
 
 void updateMotors() {
-    frontLeftMotor.move(frontLeftPower);
-    backLeftMotor.move(backLeftPower);
-    frontRightMotor.move(frontRightPower);
-    backRightMotor.move(backRightPower);
+    front_left_wheel.move(frontLeftPower);
+    back_left_wheel.move(backLeftPower);
+    front_right_wheel.move(frontRightPower);
+    back_right_wheel.move(backRightPower);
 }
 
 void setMotorsFromJoysticks(int power, int strafe) {
@@ -173,16 +172,16 @@ void setMotorsFromJoysticks(int power, int strafe) {
 }
 
 void setMotorsFromDigitalButtons() {
-    if (leftButton1) {
+    if (master.get_digital(DIGITAL_L1)) {
         setPowerVar(-100, -100, -100, -100);
     }
-    else if (rightButton1) {
+    else if (master.get_digital(DIGITAL_R1)) {
         setPowerVar(100, 100, 100, 100);
     }
-    else if (leftButton2) {
+    else if (master.get_digital(DIGITAL_L2)) {
         setPowerVar(-50, -50, -50, -50);
     }
-    else if (rightButton2) {
+    else if (master.get_digital(DIGITAL_R2)) {
         setPowerVar(50, 50, 50, 50);
     }
 }

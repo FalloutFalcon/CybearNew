@@ -5,6 +5,7 @@
 
 extern bool debugMode;
 extern bool kidMode;
+extern bool autonChosen;
 
 // Multiplication for the drive speed. Useful for creating kid safe versions for demos
 const int DEFAULT_SPEED = 1;

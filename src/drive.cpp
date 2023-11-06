@@ -32,10 +32,10 @@ void moveDir(int direction, int speed) {
         case SOUTH: // Move backward
             setPowerVar(-speed, -speed, speed, speed);
             break;
-        case EAST: // Move left
+        case WEST: // Move left
             setPowerVar(-speed, speed, -speed, speed);
             break;
-        case WEST: // Move right
+        case EAST: // Move right
             setPowerVar(speed, -speed, speed, -speed);
             break;
         case NORTHWEST: // Move diagonally up and left

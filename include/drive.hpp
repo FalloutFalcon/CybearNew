@@ -27,7 +27,7 @@ void moveFor(int time, int direction, int speed = 50);
 void moveDir(int direction, int speed);
 // Stops all motors and clears any loose power variables
 void stopMotors();
-
+// Prints alot of debug info for the drive train
 void driveDebug();
 
 #endif // DRIVE_HPP_

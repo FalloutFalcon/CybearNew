@@ -1,20 +1,32 @@
 #include "main.h"
+#include "auton.hpp"
 
 bool debugMode = false;
 bool kidMode = false;
+bool autonChosen = false;
 
 pros::Motor launcher_motor(LAUNCHER_PORT);
 
 pros::Controller master(CONTROLLER_MASTER);
 pros::Controller partner(CONTROLLER_PARTNER);
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
+void update_lcd() {
+    if(autonChosen == false) {
+        autonPrint();
+    }
+    else {
+        pros::lcd::clear_line(2);
+        pros::lcd::set_text(2, "Debug Mode   Kid Mode   Auton Mode");    }
+}
+
+void on_left_button() {
+    if(autonChosen == false) {
+        swapAuton(-1);
+    }
+}
 void on_center_button() {
+    pros::lcd::clear_line(2);
+    /*
 	if (debugMode == false) {
         pros::lcd::clear_line(2);
 		pros::lcd::set_text(2, "Debug Mode Enabled");
@@ -24,6 +36,12 @@ void on_center_button() {
         pros::lcd::set_text(2, "Debug Mode Disabled");
         debugMode = false;
 	}
+    */
+}
+void on_right_button() {
+    if(autonChosen == false) {
+        swapAuton(1);
+    }
 }
 
 /**
@@ -33,10 +51,13 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+    std::cout << "Init" << std::endl;
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "9263A");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+    std::cout << "Screen Init" << std::endl;
+	pros::lcd::set_text(3, "9263A");
+	//pros::lcd::register_btn0_cb(on_left_button);
+	//pros::lcd::register_btn1_cb(on_center_button);
+    //pros::lcd::register_btn2_cb(on_right_button);
 }
 
 /**
@@ -71,19 +92,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    while (true) {
-        moveFor(1000, NORTH,25);
-        moveFor(1000, SOUTH,25);
-        moveFor(1000, EAST,25);
-        moveFor(1000, WEST,25);
-        moveFor(1000, NORTHWEST,25);
-        moveFor(1000, SOUTHWEST,25);
-        moveFor(1000, NORTHEAST,25);
-        moveFor(1000, NORTHWEST,25);
-        moveFor(1000, TURNLEFT,25);
-        moveFor(1000, TURNRIGHT,25);
-        stopMotors();
-    }
+    runAuton(1);
 }
 
 /**
@@ -101,14 +110,12 @@ void autonomous() {
  */
 void opcontrol() {
     while (true) {
+        pros::lcd::set_text(3, "9263A");
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 
 		// Reset the power because it is set in multiple places
-		frontLeftPower = 0;
-		backLeftPower = 0;
-		frontRightPower = 0;
-		backRightPower = 0;
+		setPowerVar(0, 0, 0, 0);
 			
         setMotorsFromJoysticks(power, strafe);
 

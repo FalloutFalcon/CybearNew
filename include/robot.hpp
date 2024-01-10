@@ -16,7 +16,7 @@ const int BACK_LEFT_WHEEL_PORT = 4;
 const int FRONT_RIGHT_WHEEL_PORT = 2;
 const int BACK_RIGHT_WHEEL_PORT = 3;
 const int LAUNCHER_PORT = 5;
-
+const int CLIMB_PORT = 6;
 
 #define NORTH 1
 #define SOUTH 2

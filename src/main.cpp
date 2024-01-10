@@ -6,40 +6,50 @@ bool kidMode = false;
 bool autonChosen = false;
 
 pros::Motor launcher_motor(LAUNCHER_PORT);
+pros::Motor climb_motor(CLIMB_PORT);
 
 pros::Controller master(CONTROLLER_MASTER);
 pros::Controller partner(CONTROLLER_PARTNER);
 
-void update_lcd() {
-    if(autonChosen == false) {
+void update_lcd()
+{
+    if (autonChosen == false)
+    {
         autonPrint();
     }
-    else {
+    else
+    {
         pros::lcd::clear_line(2);
-        pros::lcd::set_text(2, "Debug Mode   Kid Mode   Auton Mode");    }
+        pros::lcd::set_text(2, "Debug Mode   Kid Mode   Auton Mode");
+    }
 }
 
-void on_left_button() {
-    if(autonChosen == false) {
+void on_left_button()
+{
+    if (autonChosen == false)
+    {
         swapAuton(-1);
     }
 }
-void on_center_button() {
+void on_center_button()
+{
     pros::lcd::clear_line(2);
     /*
-	if (debugMode == false) {
+    if (debugMode == false) {
         pros::lcd::clear_line(2);
-		pros::lcd::set_text(2, "Debug Mode Enabled");
+        pros::lcd::set_text(2, "Debug Mode Enabled");
         debugMode = true;
-	} else {
-		pros::lcd::clear_line(2);
+    } else {
+        pros::lcd::clear_line(2);
         pros::lcd::set_text(2, "Debug Mode Disabled");
         debugMode = false;
-	}
+    }
     */
 }
-void on_right_button() {
-    if(autonChosen == false) {
+void on_right_button()
+{
+    if (autonChosen == false)
+    {
         swapAuton(1);
     }
 }
@@ -50,14 +60,15 @@ void on_right_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
+void initialize()
+{
     std::cout << "Init" << std::endl;
-	pros::lcd::initialize();
+    pros::lcd::initialize();
     std::cout << "Screen Init" << std::endl;
-	pros::lcd::set_text(3, "9263A");
-	//pros::lcd::register_btn0_cb(on_left_button);
-	//pros::lcd::register_btn1_cb(on_center_button);
-    //pros::lcd::register_btn2_cb(on_right_button);
+    pros::lcd::set_text(3, "9263A");
+    // pros::lcd::register_btn0_cb(on_left_button);
+    // pros::lcd::register_btn1_cb(on_center_button);
+    // pros::lcd::register_btn2_cb(on_right_button);
 }
 
 /**
@@ -76,7 +87,8 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {
+void competition_initialize()
+{
     debugMode = false;
 }
 
@@ -91,7 +103,8 @@ void competition_initialize() {
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
+void autonomous()
+{
     runAuton(1);
 }
 
@@ -108,80 +121,122 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {
-    while (true) {
+void opcontrol()
+{
+    pros::ADIDigitalOut piston('A');
+    while (true)
+    {
         pros::lcd::set_text(3, "9263A");
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 
-		// Reset the power because it is set in multiple places
-		setPowerVar(0, 0, 0, 0);
-			
+        // Reset the power because it is set in multiple places
+        setPowerVar(0, 0, 0, 0);
+
         setMotorsFromJoysticks(power, strafe);
 
         setMotorsFromDigitalButtons();
 
         // Set motor values based on individual axes if not already set
-        if (frontLeftPower == 0 && backLeftPower == 0 && frontRightPower == 0 && backRightPower == 0) {
+        if (frontLeftPower == 0 && backLeftPower == 0 && frontRightPower == 0 && backRightPower == 0)
+        {
             setMotorsFromAxes(power, strafe);
         }
 
         updateMotors();
 
-        if(debugMode == true) {
+        if (debugMode == true)
+        {
             driveDebug();
         }
 
-        if(partner.get_digital(DIGITAL_L1)) {
-            launcher_motor.move(50);
-        } 
-        else if (partner.get_digital(DIGITAL_L2)) {
-            launcher_motor.move(-50);
+        if (partner.get_digital(DIGITAL_R1))
+        {
+            launcher_motor.move(127);
         }
-        else {
+        else if (partner.get_digital(DIGITAL_R2))
+        {
+            launcher_motor.move(-127);
+        }
+        else
+        {
+            launcher_motor.move(0);
+        }
+        if (partner.get_digital(DIGITAL_L1))
+        {
+            piston.set_value(true);
+        }
+        else if (partner.get_digital(DIGITAL_L2))
+        {
+            piston.set_value(false);
+        }
+        if (partner.get_digital(DIGITAL_UP))
+        {
+            climb_motor.move(127);
+        }
+        else if (partner.get_digital(DIGITAL_DOWN))
+        {
+            climb_motor.move(-127);
+        }
+        else
+        {
             launcher_motor.move(0);
         }
     }
 }
 
-void setMotorsFromJoysticks(int power, int strafe) {
-    if (abs(power) > 0.2 && abs(strafe) > 0.2) {
+void setMotorsFromJoysticks(int power, int strafe)
+{
+    if (abs(power) > 0.2 && abs(strafe) > 0.2)
+    {
         int move = abs(power) + abs(strafe);
-        if (power > 0 && strafe > 0) {
+        if (power > 0 && strafe > 0)
+        {
             setPowerVar(move, 0, 0, -move);
         }
-        else if (power > 0 && strafe < 0) {
+        else if (power > 0 && strafe < 0)
+        {
             setPowerVar(0, move, -move, 0);
         }
-        else if (power < 0 && strafe < 0) {
+        else if (power < 0 && strafe < 0)
+        {
             setPowerVar(-move, 0, 0, move);
         }
-        else if (power < 0 && strafe > 0) {
+        else if (power < 0 && strafe > 0)
+        {
             setPowerVar(0, -move, move, 0);
         }
     }
 }
 
-void setMotorsFromDigitalButtons() {
-    if (master.get_digital(DIGITAL_L1)) {
+void setMotorsFromDigitalButtons()
+{
+    if (master.get_digital(DIGITAL_L1))
+    {
         setPowerVar(-100, -100, -100, -100);
     }
-    else if (master.get_digital(DIGITAL_R1)) {
+    else if (master.get_digital(DIGITAL_R1))
+    {
         setPowerVar(100, 100, 100, 100);
     }
-    else if (master.get_digital(DIGITAL_L2)) {
+    else if (master.get_digital(DIGITAL_L2))
+    {
         setPowerVar(-50, -50, -50, -50);
     }
-    else if (master.get_digital(DIGITAL_R2)) {
+    else if (master.get_digital(DIGITAL_R2))
+    {
         setPowerVar(50, 50, 50, 50);
     }
 }
 
-void setMotorsFromAxes(int power, int strafe) {
-    if (abs(power) > 0.2) {
+void setMotorsFromAxes(int power, int strafe)
+{
+    if (abs(power) > 0.2)
+    {
         setPowerVar(power, power, -power, -power);
     }
-    else if (abs(strafe) > 0.2) {
+    else if (abs(strafe) > 0.2)
+    {
         setPowerVar(strafe, -strafe, strafe, -strafe);
     }
 }

@@ -221,8 +221,8 @@
             }
         },
         "upload_options": {
-    "description": "Cybear Over Under,
-    "slot":  1,
+    "description": "Cybear Over Under",
+    "slot": 1,
     "icon": "pros"
         }
   }

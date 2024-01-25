@@ -50,7 +50,7 @@ void spinAuton() {
 
 void left1Auton() {
     openPlough();
-    moveFor(1000, NORTH, 25);
+    moveFor(2000, NORTH, 25);
 }
 
 void right1Auton() {
@@ -59,10 +59,14 @@ void right1Auton() {
 
 void left2Auton() {
     moveFor(2000, NORTH, 25);
-    moveFor(100, TURNLEFT, 25);
-    //launch tribal
+    moveFor(500, TURNLEFT, 25);
+    releaseLauncher();
 }
 
 void right2Auton() {
+    openPlough();
     moveFor(1000, NORTH, 25);
+    moveFor(500, TURNRIGHT, 25);
+    moveFor(1000, NORTH, 25);
+    moveFor(50, TURNRIGHT, 25);
 }

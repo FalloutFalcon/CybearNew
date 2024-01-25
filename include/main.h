@@ -75,6 +75,7 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 #include "robot.hpp"
+#include "drive.hpp"
 //#include <iostream>
 #endif
 

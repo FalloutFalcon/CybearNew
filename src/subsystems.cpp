@@ -24,10 +24,12 @@ void movePlough(int power) {
 
 void openPlough() {
     plough_motor.move(127);
+    //plough_motor.move_absolute(900, 100);
 }
 
 void closePlough() {
     plough_motor.move(-127);
+    //plough_motor.move_absolute(0, 100);
 }
 
 void subSystemDebug() {

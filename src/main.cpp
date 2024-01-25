@@ -104,7 +104,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-    runAuton(1);
+    runAuton(2);
 }
 
 /**
@@ -124,7 +124,7 @@ void opcontrol()
 {
     while (true)
     {
-        pros::lcd::set_text(3, "9263A");
+        pros::lcd::set_text(3, "9263A Over Under");
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 

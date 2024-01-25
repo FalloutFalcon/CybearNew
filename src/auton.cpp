@@ -1,10 +1,16 @@
 #include "main.h"
+#include "drive.hpp"
 #include "auton.hpp"
+#include "subsystems.hpp"
 
 //So this creates a list of functions that can be called by index with the void type
 std::function<void()> autonScripts[] = {
     testAuton,
-    spinAuton
+    spinAuton,
+    left1Auton,
+    right1Auton,
+    left2Auton,
+    right2Auton
 };
 
 int scriptIndex = 0;
@@ -42,3 +48,21 @@ void spinAuton() {
     moveDir(TURNLEFT, 25);
 }
 
+void left1Auton() {
+    openPlough();
+    moveFor(1000, NORTH, 25);
+}
+
+void right1Auton() {
+    moveFor(1000, NORTH, 25);
+}
+
+void left2Auton() {
+    moveFor(2000, NORTH, 25);
+    moveFor(100, TURNLEFT, 25);
+    //launch tribal
+}
+
+void right2Auton() {
+    moveFor(1000, NORTH, 25);
+}

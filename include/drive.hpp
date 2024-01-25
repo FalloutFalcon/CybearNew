@@ -1,8 +1,6 @@
 #ifndef _DRIVE_HPP_
 #define _DRIVE_HPP_
 
-#include "main.h"
-
 extern int frontLeftPower;
 extern int backLeftPower;
 extern int frontRightPower;

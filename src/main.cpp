@@ -1,12 +1,11 @@
 #include "main.h"
+#include "drive.hpp"
 #include "auton.hpp"
+#include "subsystems.hpp"
 
-bool debugMode = false;
+bool debugMode = true;
 bool kidMode = false;
 bool autonChosen = false;
-
-pros::Motor launcher_motor(LAUNCHER_PORT);
-pros::Motor climb_motor(CLIMB_PORT);
 
 pros::Controller master(CONTROLLER_MASTER);
 pros::Controller partner(CONTROLLER_PARTNER);
@@ -123,7 +122,6 @@ void autonomous()
  */
 void opcontrol()
 {
-    pros::ADIDigitalOut piston('A');
     while (true)
     {
         pros::lcd::set_text(3, "9263A");
@@ -147,40 +145,32 @@ void opcontrol()
 
         if (debugMode == true)
         {
-            driveDebug();
+            subSystemDebug();
         }
 
         if (partner.get_digital(DIGITAL_R1))
         {
-            launcher_motor.move(127);
+            moveLauncher(127);
         }
         else if (partner.get_digital(DIGITAL_R2))
         {
-            launcher_motor.move(-127);
+            moveLauncher(-127);
         }
         else
         {
-            launcher_motor.move(0);
+            moveLauncher(0);
         }
+
         if (partner.get_digital(DIGITAL_L1))
         {
-            piston.set_value(true);
+            movePlough(127);
         }
         else if (partner.get_digital(DIGITAL_L2))
         {
-            piston.set_value(false);
+            movePlough(-127);
         }
-        if (partner.get_digital(DIGITAL_UP))
-        {
-            climb_motor.move(127);
-        }
-        else if (partner.get_digital(DIGITAL_DOWN))
-        {
-            climb_motor.move(-127);
-        }
-        else
-        {
-            launcher_motor.move(0);
+        else {
+            movePlough(0);
         }
     }
 }

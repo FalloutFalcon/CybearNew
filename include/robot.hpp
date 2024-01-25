@@ -1,8 +1,6 @@
 #ifndef _ROBOT_HPP_
 #define _ROBOT_HPP_
 
-#include "main.h"
-
 extern bool debugMode;
 extern bool kidMode;
 extern bool autonChosen;
@@ -17,6 +15,7 @@ const int FRONT_RIGHT_WHEEL_PORT = 2;
 const int BACK_RIGHT_WHEEL_PORT = 3;
 const int LAUNCHER_PORT = 5;
 const int CLIMB_PORT = 6;
+const int PLOUGH_PORT = 7;
 
 #define NORTH 1
 #define SOUTH 2

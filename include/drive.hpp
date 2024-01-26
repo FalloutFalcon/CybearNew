@@ -16,13 +16,13 @@ void updateMotors();
 // Auton Control Functions. Related mostly to timing
 
 // Uses moveDir to move in a direction for a specified time. Direction and speed are passed to moveDir. Time is in miliseconds
-void moveFor(int time, int direction, int speed = 50);
+void moveFor(int time, int direction = NORTH, int speed = 50);
 /**
  * Uses unicode to set the PowerVars to move in a direction with a set speed
  * \param speed
  *        Between -127 to 127. Defaults to 50
 **/
-void moveDir(int direction, int speed);
+void moveDir(int direction = NORTH, int speed = 50);
 // Stops all motors and clears any loose power variables
 void stopMotors();
 // Prints alot of debug info for the drive train

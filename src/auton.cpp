@@ -1,6 +1,9 @@
 #include "main.h"
+#include "drive.hpp"
 #include "auton.hpp"
 #include "subsystems.hpp"
+
+int scriptIndex = 0;
 
 //So this creates a list of functions that can be called by index with the void type
 std::function<void()> autonScripts[] = {
@@ -12,10 +15,12 @@ std::function<void()> autonScripts[] = {
     right2Auton
 };
 
-int scriptIndex = 0;
-
 void swapAuton(int changeAmount) {
     scriptIndex = scriptIndex + changeAmount;
+}
+
+void runSelectedAuton() {
+    runAuton(scriptIndex);
 }
 
 void runAuton(int auton) {

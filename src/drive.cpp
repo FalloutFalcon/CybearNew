@@ -64,7 +64,7 @@ void moveDir(int direction, int speed) {
 }
 
 void moveFor(int time, int direction, int speed) {
-    moveDir(time, direction);
+    moveDir(direction, speed);
     pros::delay(time);
     stopMotors();
 }
@@ -77,14 +77,14 @@ void stopMotors() {
 void driveDebug() {
     int FLVolt = front_left_wheel.get_voltage();
     int FLTemp = front_left_wheel.get_temperature();
-    pros::lcd::print(3, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
+    pros::lcd::print(4, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
     int BLVolt = back_left_wheel.get_voltage();
     int BLTemp = back_left_wheel.get_temperature();
-    pros::lcd::print(4, "BL code:%d volt:%d temp:%d", backLeftPower, BLVolt, BLTemp);
+    pros::lcd::print(5, "BL code:%d volt:%d temp:%d", backLeftPower, BLVolt, BLTemp);
     int FRVolt = front_right_wheel.get_voltage();
     int FRTemp = front_right_wheel.get_temperature();
-    pros::lcd::print(5, "FR code:%d volt:%d temp:%d", frontRightPower, FRVolt, FRTemp);
+    pros::lcd::print(6, "FR code:%d volt:%d temp:%d", frontRightPower, FRVolt, FRTemp);
     int BRVolt = back_right_wheel.get_voltage();
     int BRTemp = back_right_wheel.get_temperature();
-    pros::lcd::print(6, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
+    pros::lcd::print(7, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
 }

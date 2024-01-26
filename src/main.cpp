@@ -18,7 +18,6 @@ void update_lcd()
     }
     else
     {
-        pros::lcd::clear_line(2);
         pros::lcd::set_text(2, "Debug Mode   Kid Mode   Auton Mode");
     }
 }
@@ -63,8 +62,17 @@ void initialize()
 {
     std::cout << "Init" << std::endl;
     pros::lcd::initialize();
-    std::cout << "Screen Init" << std::endl;
-    pros::lcd::set_text(3, "9263A");
+    std::cout << "Screen Init Ran" << std::endl;
+    if(pros::lcd::is_initialized() == true)
+    {
+        std::cout << "Screen is initialized" << std::endl;
+    }
+    else
+    {
+        std::cout << "Screen is not initialized. Why...." << std::endl;
+    }
+    pros::lcd::set_text(1, "9263A");
+    pros::lcd::print(1, "9263A");
     // pros::lcd::register_btn0_cb(on_left_button);
     // pros::lcd::register_btn1_cb(on_center_button);
     // pros::lcd::register_btn2_cb(on_right_button);
@@ -88,7 +96,7 @@ void disabled() {}
  */
 void competition_initialize()
 {
-    debugMode = false;
+
 }
 
 /**
@@ -104,7 +112,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-    right1Auton();
+    moveFor(1000, NORTH, 25);
 }
 
 /**
@@ -122,9 +130,10 @@ void autonomous()
  */
 void opcontrol()
 {
+    int launcher_speed = 75;
     while (true)
     {
-        pros::lcd::set_text(3, "9263A Over Under");
+        pros::lcd::set_text(1, "9263A Driver Control");
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 
@@ -143,18 +152,21 @@ void opcontrol()
 
         updateMotors();
 
-        if (debugMode == true)
-        {
-            subSystemDebug();
-        }
-
         if (partner.get_digital(DIGITAL_R1))
         {
-            moveLauncher(75);
+            moveLauncher(launcher_speed);
         }
         else if (partner.get_digital(DIGITAL_R2))
         {
-            moveLauncher(-75);
+            moveLauncher(-launcher_speed);
+        }
+        else if (master.get_digital(DIGITAL_UP))
+        {
+             moveLauncher(launcher_speed);
+        }
+        else if (master.get_digital(DIGITAL_DOWN))
+        {
+            moveLauncher(-launcher_speed);
         }
         else
         {
@@ -171,6 +183,20 @@ void opcontrol()
         }
         else {
             movePlough(0);
+        }
+
+        if (partner.get_digital(DIGITAL_UP))
+        {
+            launcher_speed += 10;
+        }
+        else if (partner.get_digital(DIGITAL_DOWN))
+        {
+            launcher_speed -= 10;
+        }
+
+        if (partner.get_digital(DIGITAL_X))
+        {
+            swapAuton(1);
         }
     }
 }

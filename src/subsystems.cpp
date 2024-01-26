@@ -34,12 +34,12 @@ void subSystemDebug() {
     int launcherVolt = launcher_motor.get_voltage();
     int launcherTemp = launcher_motor.get_temperature();
     int launcherPos = launcher_motor.get_position();
-    pros::lcd::print(3, "Launcher pos:%d volt:%d temp:%d", launcherPos, launcherVolt, launcherTemp);
+    pros::lcd::print(2, "Launcher pos:%d volt:%d temp:%d", launcherPos, launcherVolt, launcherTemp);
     std::cout << "Launcher pos: " << launcherPos << " volt: " << launcherVolt << " temp: " << launcherTemp << std::endl;
     
     int ploughVolt = plough_motor.get_voltage();
     int ploughTemp = plough_motor.get_temperature();
     int ploughPos = plough_motor.get_position();
-    pros::lcd::print(4, "Plough pos:%d volt:%d temp:%d", ploughPos, ploughVolt, ploughTemp);
+    pros::lcd::print(3, "Plough pos:%d volt:%d temp:%d", ploughPos, ploughVolt, ploughTemp);
     std::cout << "Plough pos: " << ploughPos << " volt: " << ploughVolt << " temp: " << ploughTemp << std::endl;
 }

@@ -2,6 +2,7 @@
 #define _AUTON_HPP_
 
 void swapAuton(int changeAmount);
+void runSelectedAuton();
 void runAuton(int auton);
 void autonPrint();
 

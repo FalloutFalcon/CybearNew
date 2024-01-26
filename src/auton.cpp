@@ -1,5 +1,4 @@
 #include "main.h"
-#include "drive.hpp"
 #include "auton.hpp"
 #include "subsystems.hpp"
 
@@ -45,7 +44,7 @@ void testAuton() {
 }
 
 void spinAuton() {
-    moveDir(TURNLEFT, 25);
+    moveDir(TURNLEFT, 10);
 }
 
 void left1Auton() {

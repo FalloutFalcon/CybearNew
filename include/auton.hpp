@@ -5,6 +5,7 @@ void swapAuton(int changeAmount);
 void runSelectedAuton();
 void runAuton(int auton);
 void autonPrint();
+int currentAuton();
 
 void testAuton();
 void spinAuton();

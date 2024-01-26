@@ -32,6 +32,10 @@ void autonPrint() {
     pros::lcd::set_text(2, "Auton: " + std::to_string(scriptIndex));
 }
 
+int currentAuton() {
+    return scriptIndex;
+}
+
 void testAuton() {
     while (true) {
         moveFor(1000, NORTH, 25);

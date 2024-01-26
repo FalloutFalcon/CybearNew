@@ -60,22 +60,28 @@ void on_right_button()
  */
 void initialize()
 {
-    std::cout << "Init" << std::endl;
+    std::cout << "Init\n";
     pros::lcd::initialize();
-    std::cout << "Screen Init Ran" << std::endl;
+    std::cout << "Screen Init Ran\n";
     if(pros::lcd::is_initialized() == true)
     {
-        std::cout << "Screen is initialized" << std::endl;
+        std::cout << "Screen is initialized\n";
     }
     else
     {
-        std::cout << "Screen is not initialized. Why...." << std::endl;
+        std::cout << "Screen is not initialized. Why....\n";
     }
-    pros::lcd::set_text(1, "9263A");
-    pros::lcd::print(1, "9263A");
-    // pros::lcd::register_btn0_cb(on_left_button);
-    // pros::lcd::register_btn1_cb(on_center_button);
-    // pros::lcd::register_btn2_cb(on_right_button);
+    pros::lcd::set_text(1, "9263A Initializing");
+    pros::lcd::print(1, "9263A Initialized");
+    master.set_text(0, 0, "Master Controller");
+    partner.set_text(0, 0, "Partner Controller");
+    partner.print(1, 0, "Current Auton: %d", currentAuton());
+    //pros::Task my_task (my_task_fn, (void*)"PROS", TASK_PRIORITY_DEFAULT, ASK_STACK_DEPTH_DEFAULT, "My Task");
+    pros::Task printingTask(printingInfo);
+
+    //pros::lcd::register_btn0_cb(on_left_button);
+    pros::lcd::register_btn1_cb(on_center_button);
+    //pros::lcd::register_btn2_cb(on_right_button);
 }
 
 /**
@@ -254,5 +260,13 @@ void setMotorsFromAxes(int power, int strafe)
     else if (abs(strafe) > 0.2)
     {
         setPowerVar(strafe, -strafe, strafe, -strafe);
+    }
+}
+
+void printingInfo(void* param) {
+    while (true) {
+        subSystemDebug();
+        driveDebug();
+        pros::delay(500);
     }
 }

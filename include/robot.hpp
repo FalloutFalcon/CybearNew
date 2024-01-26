@@ -36,4 +36,6 @@ void setMotorsFromDigitalButtons();
 // Set motor values based on individual axes
 void setMotorsFromAxes(int power, int strafe);
 
+void printingInfo(void* param);
+
 #endif // ROBOT_HPP_

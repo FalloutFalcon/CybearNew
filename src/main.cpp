@@ -104,7 +104,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-    runAuton(2);
+    right1Auton();
 }
 
 /**
@@ -150,11 +150,11 @@ void opcontrol()
 
         if (partner.get_digital(DIGITAL_R1))
         {
-            moveLauncher(127);
+            moveLauncher(75);
         }
         else if (partner.get_digital(DIGITAL_R2))
         {
-            moveLauncher(-127);
+            moveLauncher(-75);
         }
         else
         {

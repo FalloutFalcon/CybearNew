@@ -9,13 +9,11 @@ void moveLauncher(int power) {
 }
 
 void windUpLauncher() {
-    launcher_motor.move(-127);
-    pros::delay(1000);
-    launcher_motor.brake();
+    launcher_motor.move_absolute(-900, 25);
 }
 
 void releaseLauncher() {
-    launcher_motor.move(127);
+    launcher_motor.move_absolute(0, 25);
 }
 
 void movePlough(int power) {

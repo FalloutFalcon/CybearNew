@@ -24,10 +24,7 @@ void update_lcd()
 
 void on_left_button()
 {
-    if (autonChosen == false)
-    {
-        swapAuton(-1);
-    }
+    windUpLauncher();
 }
 void on_center_button()
 {
@@ -59,7 +56,7 @@ void on_right_button()
  * to keep execution time for this mode under a few seconds.
  */
 void initialize()
-{
+{   
     std::cout << "Init\n";
     pros::lcd::initialize();
     std::cout << "Screen Init Ran\n";
@@ -71,17 +68,16 @@ void initialize()
     {
         std::cout << "Screen is not initialized. Why....\n";
     }
-    pros::lcd::set_text(1, "9263A Initializing");
-    pros::lcd::print(1, "9263A Initialized");
-    master.set_text(0, 0, "Master Controller");
-    partner.set_text(0, 0, "Partner Controller");
-    partner.print(1, 0, "Current Auton: %d", currentAuton());
+    pros::lcd::set_text(0, "9263A Initializing");
+    pros::lcd::print(0, "9263A Initialized");
+    master.set_text(2, 0, "Master");
+    partner.set_text(2, 0, "Partner");
     //pros::Task my_task (my_task_fn, (void*)"PROS", TASK_PRIORITY_DEFAULT, ASK_STACK_DEPTH_DEFAULT, "My Task");
     pros::Task printingTask(printingInfo);
 
-    //pros::lcd::register_btn0_cb(on_left_button);
+    pros::lcd::register_btn0_cb(on_left_button);
     pros::lcd::register_btn1_cb(on_center_button);
-    //pros::lcd::register_btn2_cb(on_right_button);
+    pros::lcd::register_btn2_cb(on_right_button);
 }
 
 /**
@@ -89,7 +85,9 @@ void initialize()
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+    pros::lcd::set_text(0, "9263A Disabled");
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -102,7 +100,9 @@ void disabled() {}
  */
 void competition_initialize()
 {
-
+    debugMode = false;
+    pros::lcd::set_text(0, "9263A Compeition Initialize");
+    windUpLauncher();
 }
 
 /**
@@ -118,7 +118,8 @@ void competition_initialize()
  */
 void autonomous()
 {
-    moveFor(1000, NORTH, 25);
+    pros::lcd::set_text(0, "9263A Autonomous");
+    runSelectedAuton();
 }
 
 /**
@@ -136,10 +137,10 @@ void autonomous()
  */
 void opcontrol()
 {
-    int launcher_speed = 75;
+    bool launcher_running = false;
     while (true)
     {
-        pros::lcd::set_text(1, "9263A Driver Control");
+        pros::lcd::set_text(0, "9263A Driver Control");
         int power = (master.get_analog(ANALOG_LEFT_Y) * DEFAULT_SPEED);
         int strafe = (master.get_analog(ANALOG_RIGHT_X) * DEFAULT_SPEED);
 
@@ -158,52 +159,73 @@ void opcontrol()
 
         updateMotors();
 
-        if (partner.get_digital(DIGITAL_R1))
+        if (master.get_digital(DIGITAL_UP) || partner.get_digital(DIGITAL_L1))
+        {
+            moveLauncher(-launcher_speed);
+        }
+        else if (master.get_digital(DIGITAL_DOWN) || partner.get_digital(DIGITAL_L2))
         {
             moveLauncher(launcher_speed);
         }
-        else if (partner.get_digital(DIGITAL_R2))
-        {
-            moveLauncher(-launcher_speed);
-        }
-        else if (master.get_digital(DIGITAL_UP))
-        {
-             moveLauncher(launcher_speed);
-        }
-        else if (master.get_digital(DIGITAL_DOWN))
-        {
-            moveLauncher(-launcher_speed);
-        }
-        else
-        {
+        else {
             moveLauncher(0);
         }
+        /*
+        if (partner.get_digital_new_press(DIGITAL_R1))
+        {
+            releaseLauncher();
+        }
+        if (partner.get_digital_new_press(DIGITAL_R2))
+        {
+            windUpLauncher();
+        }
+        */
 
-        if (partner.get_digital(DIGITAL_L1))
+        if (partner.get_digital_new_press(DIGITAL_UP))
         {
-            movePlough(127);
+            int new_launcher_speed = launcher_speed + 10;
+            if (new_launcher_speed > 127) {
+                new_launcher_speed = 127;
+            }
+            launcher_speed = new_launcher_speed;
+            partner.print(1, 1, "Launcher:%d", launcher_speed);
+            std::cout << launcher_speed << "\n";
         }
-        else if (partner.get_digital(DIGITAL_L2))
+        else if (partner.get_digital_new_press(DIGITAL_DOWN))
         {
-            movePlough(-127);
+            int new_launcher_speed = launcher_speed - 10;
+            if (new_launcher_speed < 10) {
+                new_launcher_speed = 10;
+            }
+            launcher_speed = new_launcher_speed;
+            partner.print(1, 1, "Launcher:%d", launcher_speed);
+            std::cout << launcher_speed << "\n";
         }
-        else {
-            movePlough(0);
-        }
-
-        if (partner.get_digital(DIGITAL_UP))
-        {
-            launcher_speed += 10;
-        }
-        else if (partner.get_digital(DIGITAL_DOWN))
-        {
-            launcher_speed -= 10;
-        }
-
-        if (partner.get_digital(DIGITAL_X))
+        /*
+        if (partner.get_digital_new_press(DIGITAL_X))
         {
             swapAuton(1);
         }
+        else if (partner.get_digital_new_press(DIGITAL_B))
+        {
+            swapAuton(-1);
+        }
+        if (debugMode == true) {
+            if (partner.get_digital_new_press(DIGITAL_Y))
+            {
+                right1Auton();
+            }
+        }
+        if (partner.get_digital_new_press(DIGITAL_A)) {
+            do {
+                windUpLauncher();
+                pros::delay(2000);
+                releaseLauncher();
+                pros::delay(500);
+            } while (!partner.get_digital_new_press(DIGITAL_A));
+        }
+        */
+        pros::delay(2);
     }
 }
 

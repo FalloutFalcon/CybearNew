@@ -3,7 +3,7 @@
 #include "auton.hpp"
 #include "subsystems.hpp"
 
-int scriptIndex = 0;
+int scriptIndex = DEFAULT_AUTON_INDEX;
 
 //So this creates a list of functions that can be called by index with the void type
 std::function<void()> autonScripts[] = {
@@ -12,11 +12,13 @@ std::function<void()> autonScripts[] = {
     left1Auton,
     right1Auton,
     left2Auton,
-    right2Auton
+    right2Auton,
+    pushAuton
 };
 
 void swapAuton(int changeAmount) {
     scriptIndex = scriptIndex + changeAmount;
+    autonPrint();
 }
 
 void runSelectedAuton() {
@@ -28,8 +30,7 @@ void runAuton(int auton) {
 }
 
 void autonPrint() {
-    pros::lcd::clear_line(2);
-    pros::lcd::set_text(2, "Auton: " + std::to_string(scriptIndex));
+    pros::lcd::set_text(1, "Auton: " + std::to_string(scriptIndex));
 }
 
 int currentAuton() {
@@ -57,18 +58,19 @@ void spinAuton() {
 }
 
 void left1Auton() {
-    openPlough();
-    moveFor(2000, NORTH, 25);
+    moveFor(500, NORTH, 127);
 }
 
 void right1Auton() {
-    moveFor(1000, NORTH, 25);
+    moveFor(500, NORTH, 75);
+    moveFor(500, SOUTH, 75);
 }
 
 void left2Auton() {
-    moveFor(2000, NORTH, 25);
-    moveFor(500, TURNLEFT, 25);
-    releaseLauncher();
+    //windUpLauncher();
+    //pros::delay(5000);
+    windUpLauncher();
+    //releaseLauncher();
 }
 
 void right2Auton() {
@@ -77,4 +79,9 @@ void right2Auton() {
     moveFor(500, TURNRIGHT, 25);
     moveFor(1000, NORTH, 25);
     moveFor(50, TURNRIGHT, 25);
+}
+
+void pushAuton() {
+    moveFor(3500, NORTH, 75);
+    moveFor(1000, SOUTH, 75);
 }

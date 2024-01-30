@@ -17,6 +17,7 @@ void updateMotors();
 
 // Uses moveDir to move in a direction for a specified time. Direction and speed are passed to moveDir. Time is in miliseconds
 void moveFor(int time, int direction = NORTH, int speed = 50);
+
 /**
  * Uses unicode to set the PowerVars to move in a direction with a set speed
  * \param speed
@@ -24,8 +25,23 @@ void moveFor(int time, int direction = NORTH, int speed = 50);
 **/
 void moveDir(int direction = NORTH, int speed = 50);
 
+/**
+ * Moves the object relative to its current position.
+ * 
+ * @param distance The distance to move relative to the current position in pure encoder units.
+ * @param speed The speed at which to move. Default value is 50.
+ */
 void moveRelative(int distance, int speed = 50);
-void moveDistance(int distance, int direction = NORTH, int speed = 50);
+
+/**
+ * Moves the robot a specified distance in a given direction at a specified speed.
+ *
+ * @param distance The distance to move the robot in inches.
+ * @param direction The direction in which to move the robot.
+ * @param speed The speed at which to move the robot.
+ */
+void moveDistance(int distance, int direction, int speed);
+
 // Stops all motors and clears any loose power variables
 void stopMotors();
 // Prints alot of debug info for the drive train

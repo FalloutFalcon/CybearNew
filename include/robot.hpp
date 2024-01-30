@@ -20,6 +20,9 @@ const int PLOUGH_PORT = 7;
 #define RED_ENCODER_UNITS 745
 #define GREEN_ENCODER_UNITS 900
 
+//Inches
+#define WHEEL_DIAMETER 4
+
 #define NORTH 1
 #define SOUTH 2
 #define EAST 4

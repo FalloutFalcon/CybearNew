@@ -24,11 +24,11 @@ void update_lcd()
 
 void on_left_button()
 {
-    windUpLauncher();
+    swapAuton(-1);
 }
 void on_center_button()
 {
-    pros::lcd::clear_line(2);
+    runSelectedAuton();
     /*
     if (debugMode == false) {
         pros::lcd::clear_line(2);
@@ -60,18 +60,10 @@ void initialize()
     std::cout << "Init\n";
     pros::lcd::initialize();
     std::cout << "Screen Init Ran\n";
-    if (pros::lcd::is_initialized() == true)
-    {
-        std::cout << "Screen is initialized\n";
-    }
-    else
-    {
-        std::cout << "Screen is not initialized. Why....\n";
-    }
-    pros::lcd::set_text(0, "9263A Initializing");
-    pros::lcd::print(0, "9263A Initialized");
-    master.set_text(2, 0, "Master");
-    partner.set_text(2, 0, "Partner");
+    pros::lcd::set_text(0, "9263A Initialize");
+    master.set_text(1, 0, "Master");
+    partner.set_text(1, 0, "Partner");
+    autonPrint();
     // pros::Task my_task (my_task_fn, (void*)"PROS", TASK_PRIORITY_DEFAULT, ASK_STACK_DEPTH_DEFAULT, "My Task");
     pros::Task printingTask(printingInfo);
 
@@ -172,7 +164,6 @@ void opcontrol()
         {
             moveLauncher(0);
         }
-        /*
         if (partner.get_digital_new_press(DIGITAL_R1))
         {
             releaseLauncher();
@@ -181,7 +172,6 @@ void opcontrol()
         {
             windUpLauncher();
         }
-        */
 
         if (partner.get_digital_new_press(DIGITAL_UP))
         {

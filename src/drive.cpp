@@ -82,6 +82,57 @@ void moveRelative(int frontLeftMove, int backLeftMove, int frontRightMove, int b
     back_right_wheel.move_relative(backRightMove, speed);
 }
 
+void moveDistance(int distance, int direction, int speed)
+{
+    //((WHEEL_DIAMETER * PI * GEAR RATIO * RPM) / 60 SECONDS) / 12 INCHES)
+    //diagonal feet / second.
+
+
+    distance = (distance / (WHEEL_DIAMETER * M_PI)) * GREEN_ENCODER_UNITS;
+    double hypotenuse = std::sqrt(2 * std::pow(distance, 2));
+    switch (direction)
+    {
+    case NORTH: // Move forward
+        moveRelative(hypotenuse, hypotenuse, -hypotenuse, -hypotenuse, speed);
+        break;
+    case SOUTH: // Move backward
+        moveRelative(-hypotenuse, -hypotenuse, hypotenuse, hypotenuse, speed);
+        break;
+    case WEST: // Move left
+        moveRelative(-hypotenuse, hypotenuse, -hypotenuse, hypotenuse, speed);
+        break;
+    case EAST: // Move right
+        moveRelative(hypotenuse, -hypotenuse, hypotenuse, -hypotenuse, speed);
+        break;
+    case NORTHWEST: // Move diagonally up and left
+        moveRelative(0, distance, -distance, 0, speed);
+        break;
+    case SOUTHWEST: // Move diagonally down and left
+        moveRelative(-distance, 0, 0, distance, speed);
+        break;
+    case NORTHEAST: // Move diagonally up and right
+        moveRelative(distance, 0, 0, -distance, speed);
+        break;
+    case SOUTHEAST: // Move diagonally down and right
+        moveRelative(0, -distance, distance, 0, speed);
+        break;
+    case TURNLEFT: // Turn left
+        moveRelative(-distance, -distance, -distance, -distance, speed);
+        break;
+    case TURNRIGHT: // Turn right
+        moveRelative(distance, distance, distance, distance, speed);
+        break;
+    default:
+        break;
+    }
+}
+
+void turnDegrees(int degrees, int speed)
+{
+    double distance = (degrees / 360) * (WHEEL_DIAMETER * M_PI);
+    moveDistance(distance, TURNRIGHT, speed);
+}
+
 void stopMotors()
 {
     setPowerVar(0, 0, 0, 0);

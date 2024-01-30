@@ -10,20 +10,6 @@
 #define RIGHT2_AUTON 5
 #define PUSH_AUTON 6
 
-#include <vector>
-#include <string>
-
-std::vector<std::string> autonNames = {
-    "Test Auton",
-    "Spin Auton",
-    "Left1 Auton",
-    "Right1 Auton",
-    "Left2 Auton",
-    "Right2 Auton",
-    "Push Auton"
-};
-
-
 void swapAuton(int changeAmount);
 void runSelectedAuton();
 void runAuton(int auton);

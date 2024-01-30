@@ -1,6 +1,6 @@
 #include "main.h"
 
-pros::Motor launcher_motor(LAUNCHER_PORT);
+pros::Motor launcher_motor(LAUNCHER_PORT, pros::v5::MotorGears::red, pros::v5::MotorUnits::degrees);
 pros::Motor climb_motor(CLIMB_PORT);
 pros::Motor plough_motor(PLOUGH_PORT);
 
@@ -18,12 +18,12 @@ void breakLauncher()
 
 void windUpLauncher()
 {
-    launcher_motor.move_relative(-1350, launcher_speed);
+    launcher_motor.move_relative(-340, launcher_speed);
 }
 
 void releaseLauncher()
 {
-    launcher_motor.move_relative(-100, launcher_speed);
+    launcher_motor.move_relative(-20, launcher_speed);
 }
 
 void movePlough(int power)

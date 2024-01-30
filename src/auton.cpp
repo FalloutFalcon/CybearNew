@@ -15,15 +15,25 @@ std::function<void()> autonScripts[] = {
     right2Auton,
     pushAuton};
 
+std::vector<std::string> autonNames = {
+    "Test Auton",
+    "Spin Auton",
+    "Left1 Auton",
+    "Right1 Auton",
+    "Left2 Auton",
+    "Right2 Auton",
+    "Push Auton"
+};
+
 void swapAuton(int changeAmount)
 {
     if (currentAutonIndex + changeAmount > 0 && currentAutonIndex + changeAmount < sizeof(autonScripts))
     {
-        currentAutonIndex = 0;
+         currentAutonIndex = currentAutonIndex + changeAmount;
     }
     else
     {
-        currentAutonIndex = currentAutonIndex + changeAmount;
+        currentAutonIndex = 0;
     }
     autonPrint();
 }
@@ -60,8 +70,17 @@ int currentAuton()
 
 void testAuton()
 {
+    moveDistance(12, NORTH, 50);
+    moveDistance(12, SOUTH, 25);
+    moveDistance(12, EAST, 50);
+    moveDistance(12, WEST, 25);
+    moveDistance(12, NORTHWEST, 50);
+    moveDistance(12, SOUTHWEST, 25);
+    moveDistance(12, NORTHEAST, 50);
+    moveDistance(12, NORTHWEST, 25);
+    /*
     while (true)
-    {
+    {   
         moveFor(1000, NORTH, 25);
         moveFor(1000, SOUTH, 25);
         moveFor(1000, EAST, 25);
@@ -74,6 +93,7 @@ void testAuton()
         moveFor(1000, TURNRIGHT, 25);
         stopMotors();
     }
+    */
 }
 
 void spinAuton()

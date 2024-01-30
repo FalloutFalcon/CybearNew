@@ -23,6 +23,9 @@ void moveFor(int time, int direction = NORTH, int speed = 50);
  *        Between -127 to 127. Defaults to 50
 **/
 void moveDir(int direction = NORTH, int speed = 50);
+
+void moveRelative(int distance, int speed = 50);
+void moveDistance(int distance, int direction = NORTH, int speed = 50);
 // Stops all motors and clears any loose power variables
 void stopMotors();
 // Prints alot of debug info for the drive train

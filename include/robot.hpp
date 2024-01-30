@@ -17,6 +17,9 @@ const int LAUNCHER_PORT = 5;
 const int CLIMB_PORT = 6;
 const int PLOUGH_PORT = 7;
 
+#define RED_ENCODER_UNITS 745
+#define GREEN_ENCODER_UNITS 900
+
 #define NORTH 1
 #define SOUTH 2
 #define EAST 4

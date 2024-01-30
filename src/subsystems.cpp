@@ -6,37 +6,45 @@ pros::Motor plough_motor(PLOUGH_PORT);
 
 int launcher_speed = 127;
 
-void moveLauncher(int power) {
+void moveLauncher(int power)
+{
     launcher_motor.move(power);
 }
 
-void breakLauncher() {
+void breakLauncher()
+{
     launcher_motor.brake();
 }
 
-void windUpLauncher() {
+void windUpLauncher()
+{
     launcher_motor.move_relative(-1350, launcher_speed);
 }
 
-void releaseLauncher() {
+void releaseLauncher()
+{
     launcher_motor.move_relative(-100, launcher_speed);
 }
 
-void movePlough(int power) {
+void movePlough(int power)
+{
     plough_motor.move(power);
 }
 
-void openPlough() {
+void openPlough()
+{
     plough_motor.move(127);
-    //plough_motor.move_absolute(900, 100);
+    // plough_motor.move_absolute(900, 100);
 }
 
-void closePlough() {
+void closePlough()
+{
     plough_motor.move(-127);
-    //plough_motor.move_absolute(0, 100);
+    // plough_motor.move_absolute(0, 100);
 }
 
-void subSystemDebug() {
+void subSystemDebug()
+{
     int launcherVolt = launcher_motor.get_voltage();
     int launcherTemp = launcher_motor.get_temperature();
     int launcherPos = launcher_motor.get_position();

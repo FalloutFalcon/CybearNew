@@ -56,11 +56,11 @@ void on_right_button()
  * to keep execution time for this mode under a few seconds.
  */
 void initialize()
-{   
+{
     std::cout << "Init\n";
     pros::lcd::initialize();
     std::cout << "Screen Init Ran\n";
-    if(pros::lcd::is_initialized() == true)
+    if (pros::lcd::is_initialized() == true)
     {
         std::cout << "Screen is initialized\n";
     }
@@ -72,7 +72,7 @@ void initialize()
     pros::lcd::print(0, "9263A Initialized");
     master.set_text(2, 0, "Master");
     partner.set_text(2, 0, "Partner");
-    //pros::Task my_task (my_task_fn, (void*)"PROS", TASK_PRIORITY_DEFAULT, ASK_STACK_DEPTH_DEFAULT, "My Task");
+    // pros::Task my_task (my_task_fn, (void*)"PROS", TASK_PRIORITY_DEFAULT, ASK_STACK_DEPTH_DEFAULT, "My Task");
     pros::Task printingTask(printingInfo);
 
     pros::lcd::register_btn0_cb(on_left_button);
@@ -85,7 +85,8 @@ void initialize()
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {
+void disabled()
+{
     pros::lcd::set_text(0, "9263A Disabled");
 }
 
@@ -167,7 +168,8 @@ void opcontrol()
         {
             moveLauncher(launcher_speed);
         }
-        else {
+        else
+        {
             moveLauncher(0);
         }
         /*
@@ -184,7 +186,8 @@ void opcontrol()
         if (partner.get_digital_new_press(DIGITAL_UP))
         {
             int new_launcher_speed = launcher_speed + 10;
-            if (new_launcher_speed > 127) {
+            if (new_launcher_speed > 127)
+            {
                 new_launcher_speed = 127;
             }
             launcher_speed = new_launcher_speed;
@@ -194,7 +197,8 @@ void opcontrol()
         else if (partner.get_digital_new_press(DIGITAL_DOWN))
         {
             int new_launcher_speed = launcher_speed - 10;
-            if (new_launcher_speed < 10) {
+            if (new_launcher_speed < 10)
+            {
                 new_launcher_speed = 10;
             }
             launcher_speed = new_launcher_speed;
@@ -285,8 +289,10 @@ void setMotorsFromAxes(int power, int strafe)
     }
 }
 
-void printingInfo(void* param) {
-    while (true) {
+void printingInfo(void *param)
+{
+    while (true)
+    {
         subSystemDebug();
         driveDebug();
         pros::delay(500);

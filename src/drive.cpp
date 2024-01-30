@@ -11,70 +11,85 @@ pros::Motor back_left_wheel(BACK_LEFT_WHEEL_PORT);
 pros::Motor front_right_wheel(FRONT_RIGHT_WHEEL_PORT);
 pros::Motor back_right_wheel(BACK_RIGHT_WHEEL_PORT);
 
-void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove) {
+void setPowerVar(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove)
+{
     frontLeftPower = frontLeftMove;
     backLeftPower = backLeftMove;
     frontRightPower = frontRightMove;
     backRightPower = backRightMove;
 }
 
-void updateMotors() {
+void updateMotors()
+{
     front_left_wheel.move(frontLeftPower);
     back_left_wheel.move(backLeftPower);
     front_right_wheel.move(frontRightPower);
     back_right_wheel.move(backRightPower);
 }
 
-void moveDir(int direction, int speed) {
-    switch (direction) {
-        case NORTH: // Move forward
-            setPowerVar(speed, speed, -speed, -speed);
-            break;
-        case SOUTH: // Move backward
-            setPowerVar(-speed, -speed, speed, speed);
-            break;
-        case WEST: // Move left
-            setPowerVar(-speed, speed, -speed, speed);
-            break;
-        case EAST: // Move right
-            setPowerVar(speed, -speed, speed, -speed);
-            break;
-        case NORTHWEST: // Move diagonally up and left
-            setPowerVar(0, speed, -speed, 0);
-            break;
-        case SOUTHWEST: // Move diagonally down and left
-            setPowerVar(-speed, 0, 0, speed);
-            break;
-        case NORTHEAST: // Move diagonally up and right
-            setPowerVar(speed, 0, 0, -speed);
-            break;
-        case SOUTHEAST: // Move diagonally down and right
-            setPowerVar(0, -speed, speed, 0);
-            break;
-        case TURNLEFT: // Turn left
-            setPowerVar(-speed, -speed, -speed, -speed);
-            break;
-        case TURNRIGHT: // Turn right
-            setPowerVar(speed, speed, speed, speed);
-            break;
-        default:
-            break;
+void moveDir(int direction, int speed)
+{
+    switch (direction)
+    {
+    case NORTH: // Move forward
+        setPowerVar(speed, speed, -speed, -speed);
+        break;
+    case SOUTH: // Move backward
+        setPowerVar(-speed, -speed, speed, speed);
+        break;
+    case WEST: // Move left
+        setPowerVar(-speed, speed, -speed, speed);
+        break;
+    case EAST: // Move right
+        setPowerVar(speed, -speed, speed, -speed);
+        break;
+    case NORTHWEST: // Move diagonally up and left
+        setPowerVar(0, speed, -speed, 0);
+        break;
+    case SOUTHWEST: // Move diagonally down and left
+        setPowerVar(-speed, 0, 0, speed);
+        break;
+    case NORTHEAST: // Move diagonally up and right
+        setPowerVar(speed, 0, 0, -speed);
+        break;
+    case SOUTHEAST: // Move diagonally down and right
+        setPowerVar(0, -speed, speed, 0);
+        break;
+    case TURNLEFT: // Turn left
+        setPowerVar(-speed, -speed, -speed, -speed);
+        break;
+    case TURNRIGHT: // Turn right
+        setPowerVar(speed, speed, speed, speed);
+        break;
+    default:
+        break;
     }
     updateMotors();
 }
 
-void moveFor(int time, int direction, int speed) {
+void moveFor(int time, int direction, int speed)
+{
     moveDir(direction, speed);
     pros::delay(time);
     stopMotors();
 }
 
-void stopMotors() {
+void moveRelative(int frontLeftMove, int backLeftMove, int frontRightMove, int backRightMove, int speed)
+{
+    front_left_wheel.move_relative(frontLeftMove, speed);
+    back_left_wheel.move_relative(backLeftMove, speed);
+    front_right_wheel.move_relative(frontRightMove, speed);
+    back_right_wheel.move_relative(backRightMove, speed);
+}
+
+void stopMotors()
+{
     setPowerVar(0, 0, 0, 0);
     updateMotors();
 }
 
-void driveDebug() {
+void driveDebug()
+{
     int FLVolt = front_left_wheel.get_voltage();
     int FLTemp = front_left_wheel.get_temperature();
     pros::lcd::print(4, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);

@@ -3,9 +3,9 @@
 #include "auton.hpp"
 #include "subsystems.hpp"
 
-int scriptIndex = DEFAULT_AUTON_INDEX;
+int currentAutonIndex = DEFAULT_AUTON_INDEX;
 
-//So this creates a list of functions that can be called by index with the void type
+// So this creates a list of functions that can be called by index with the void type
 std::function<void()> autonScripts[] = {
     testAuton,
     spinAuton,
@@ -13,32 +13,55 @@ std::function<void()> autonScripts[] = {
     right1Auton,
     left2Auton,
     right2Auton,
-    pushAuton
-};
+    pushAuton};
 
-void swapAuton(int changeAmount) {
-    scriptIndex = scriptIndex + changeAmount;
+void swapAuton(int changeAmount)
+{
+    if (currentAutonIndex + changeAmount > 0 && currentAutonIndex + changeAmount < sizeof(autonScripts))
+    {
+        currentAutonIndex = 0;
+    }
+    else
+    {
+        currentAutonIndex = currentAutonIndex + changeAmount;
+    }
     autonPrint();
 }
 
-void runSelectedAuton() {
-    runAuton(scriptIndex);
+void runSelectedAuton()
+{
+    runAuton(currentAutonIndex);
 }
 
-void runAuton(int auton) {
+void runAuton(int auton)
+{
     autonScripts[auton]();
 }
 
-void autonPrint() {
-    pros::lcd::set_text(1, "Auton: " + std::to_string(scriptIndex));
+void autonPrint()
+{
+    pros::lcd::set_text(1, "Auton: " + autonToString(currentAutonIndex));
 }
 
-int currentAuton() {
-    return scriptIndex;
+std::string autonToString(int autonIndex)
+{
+    std::string stringIndex = "Nothing?";
+    if (autonIndex >= 0 && autonIndex < autonNames.size())
+    {
+        stringIndex = autonNames[autonIndex];
+    }
+    return stringIndex;
 }
 
-void testAuton() {
-    while (true) {
+int currentAuton()
+{
+    return currentAutonIndex;
+}
+
+void testAuton()
+{
+    while (true)
+    {
         moveFor(1000, NORTH, 25);
         moveFor(1000, SOUTH, 25);
         moveFor(1000, EAST, 25);
@@ -53,27 +76,32 @@ void testAuton() {
     }
 }
 
-void spinAuton() {
+void spinAuton()
+{
     moveDir(TURNLEFT, 10);
 }
 
-void left1Auton() {
+void left1Auton()
+{
     moveFor(500, NORTH, 127);
 }
 
-void right1Auton() {
+void right1Auton()
+{
     moveFor(500, NORTH, 75);
     moveFor(500, SOUTH, 75);
 }
 
-void left2Auton() {
-    //windUpLauncher();
-    //pros::delay(5000);
+void left2Auton()
+{
+    // windUpLauncher();
+    // pros::delay(5000);
     windUpLauncher();
-    //releaseLauncher();
+    // releaseLauncher();
 }
 
-void right2Auton() {
+void right2Auton()
+{
     openPlough();
     moveFor(1000, NORTH, 25);
     moveFor(500, TURNRIGHT, 25);
@@ -81,7 +109,8 @@ void right2Auton() {
     moveFor(50, TURNRIGHT, 25);
 }
 
-void pushAuton() {
+void pushAuton()
+{
     moveFor(3500, NORTH, 75);
     moveFor(1000, SOUTH, 75);
 }

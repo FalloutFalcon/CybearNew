@@ -195,7 +195,6 @@ void opcontrol()
             partner.print(1, 1, "Launcher:%d", launcher_speed);
             std::cout << launcher_speed << "\n";
         }
-        /*
         if (partner.get_digital_new_press(DIGITAL_X))
         {
             swapAuton(1);
@@ -218,7 +217,6 @@ void opcontrol()
                 pros::delay(500);
             } while (!partner.get_digital_new_press(DIGITAL_A));
         }
-        */
         pros::delay(2);
     }
 }

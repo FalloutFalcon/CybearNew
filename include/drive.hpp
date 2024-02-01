@@ -42,6 +42,12 @@ void moveRelative(int distance, int speed = 50);
  */
 void moveDistance(int distance, int direction, int speed);
 
+void moveDistanceWhile(int distance, int direction, int speed);
+
+bool isWithinTarget(pros::Motor& wheel, double within);
+
+bool allWheelsWithinTarget(double within); 
+
 // Stops all motors and clears any loose power variables
 void stopMotors();
 // Prints alot of debug info for the drive train

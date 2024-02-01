@@ -127,6 +127,28 @@ void moveDistance(int distance, int direction, int speed)
     }
 }
 
+void moveDistanceWhile(int distance, int direction, int speed)
+{
+    moveDistance(distance, direction, speed);
+    do
+    {
+        pros::delay(10);
+    } while (!allWheelsWithinTarget(5));
+}
+
+bool isWithinTarget(pros::Motor& wheel, double within) {
+    double position = wheel.get_position();
+    double target = wheel.get_target_position();
+    return position + within > target && position - within < target;
+}
+
+bool allWheelsWithinTarget(double within) {
+    return isWithinTarget(front_left_wheel, within) &&
+           isWithinTarget(back_left_wheel, within) &&
+           isWithinTarget(front_right_wheel, within) &&
+           isWithinTarget(back_right_wheel, within);
+}
+
 void turnDegrees(int degrees, int speed)
 {
     double distance = (degrees / 360) * (WHEEL_DIAMETER * M_PI);

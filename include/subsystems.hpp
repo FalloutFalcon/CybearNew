@@ -1,6 +1,8 @@
 #ifndef _SUBSYSTEMS_HPP_
 #define _SUBSYSTEMS_HPP_
 
+#define LAUNCHER_FREE_ZONE 28
+
 extern int launcher_speed;
 void moveLauncher(int power);
 void breakLauncher();

@@ -18,12 +18,12 @@ void breakLauncher()
 
 void windUpLauncher()
 {
-    launcher_motor.move_relative(-340, launcher_speed);
+    launcher_motor.move_relative(-332, launcher_speed);
 }
 
 void releaseLauncher()
 {
-    launcher_motor.move_relative(-20, launcher_speed);
+    launcher_motor.move_relative(-28, launcher_speed);
 }
 
 void movePlough(int power)

@@ -70,7 +70,6 @@ int currentAuton()
 
 void testAuton()
 {
-    moveDistanceWhile(6, NORTH, 50);
     moveDistanceWhile(6, NORTHWEST, 50);
     /*
     while (true)

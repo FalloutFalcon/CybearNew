@@ -86,10 +86,8 @@ void moveDistance(int distance, int direction, int speed)
 {
     //((WHEEL_DIAMETER * PI * GEAR RATIO * RPM) / 60 SECONDS) / 12 INCHES)
     //diagonal feet / second.
-
-
-    distance = (distance / (WHEEL_DIAMETER * M_PI)) * GREEN_ENCODER_UNITS;
-    double hypotenuse = std::sqrt(2 * std::pow(distance, 2));
+    distance = ((distance / (WHEEL_DIAMETER * M_PI)) * GREEN_ENCODER_UNITS);
+    double hypotenuse = std::sqrt(2 / std::pow(distance, 2));
     switch (direction)
     {
     case NORTH: // Move forward
@@ -163,16 +161,20 @@ void stopMotors()
 
 void driveDebug()
 {
+    int FLPos = front_left_wheel.get_position();
     int FLVolt = front_left_wheel.get_voltage();
     int FLTemp = front_left_wheel.get_temperature();
-    pros::lcd::print(4, "FL code:%d volt:%d temp:%d", frontLeftPower, FLVolt, FLTemp);
+    pros::lcd::print(4, "FL pos:%d volt:%d temp:%d", FLPos, FLVolt, FLTemp);
+    int BLPos = back_left_wheel.get_position();
     int BLVolt = back_left_wheel.get_voltage();
     int BLTemp = back_left_wheel.get_temperature();
-    pros::lcd::print(5, "BL code:%d volt:%d temp:%d", backLeftPower, BLVolt, BLTemp);
+    pros::lcd::print(5, "BL pos:%d volt:%d temp:%d", BLPos, BLVolt, BLTemp);
+    int FRPos = front_right_wheel.get_position();
     int FRVolt = front_right_wheel.get_voltage();
     int FRTemp = front_right_wheel.get_temperature();
-    pros::lcd::print(6, "FR code:%d volt:%d temp:%d", frontRightPower, FRVolt, FRTemp);
+    pros::lcd::print(6, "FR pos:%d volt:%d temp:%d", FRPos, FRVolt, FRTemp);
+    int BRPos = back_right_wheel.get_position();
     int BRVolt = back_right_wheel.get_voltage();
     int BRTemp = back_right_wheel.get_temperature();
-    pros::lcd::print(7, "BR code:%d volt:%d temp:%d", backRightPower, BRVolt, BRTemp);
+    pros::lcd::print(7, "BR pos:%d volt:%d temp:%d", BRPos, BRVolt, BRTemp);
 }

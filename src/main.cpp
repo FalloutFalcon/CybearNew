@@ -195,6 +195,18 @@ void opcontrol()
             partner.print(1, 1, "Launcher:%d", launcher_speed);
             std::cout << launcher_speed << "\n";
         }
+        if (partner.get_digital(DIGITAL_LEFT))
+        {
+            movePlough(50);
+        }
+        else if (partner.get_digital(DIGITAL_RIGHT))
+        {
+            movePlough(-50);
+        }
+        else
+        {
+            movePlough(0);
+        }
         if (partner.get_digital_new_press(DIGITAL_X))
         {
             swapAuton(1);

@@ -8,10 +8,13 @@ void moveLauncher(int power);
 void breakLauncher();
 void windUpLauncher();
 void releaseLauncher();
+void resetLauncher();
+void autoLaunch();
 
 void movePlough(int power);
 void openPlough();
 void closePlough();
+void fowardPlough();
 
 void subSystemDebug();
 

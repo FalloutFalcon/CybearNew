@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "CybearBasil",
+        "project_name": "(goalpush)CybearBasil",
         "target": "v5",
         "templates": {
             "kernel": {
@@ -400,7 +400,7 @@
         "upload_options": {
             "description": "Cybear Over Under",
             "icon": "pros",
-            "slot": 2
+            "slot": 4
         }
     }
 }

@@ -6,6 +6,7 @@
 bool debugMode = true;
 bool kidMode = false;
 bool autonChosen = false;
+bool isLaunching = false;
 
 pros::Controller master(CONTROLLER_MASTER);
 pros::Controller partner(CONTROLLER_PARTNER);
@@ -151,8 +152,9 @@ void opcontrol()
         }
 
         updateMotors();
-
-        if (master.get_digital(DIGITAL_UP) || partner.get_digital(DIGITAL_L1))
+        /*
+        if(!isLaunching) {
+            if (master.get_digital(DIGITAL_UP) || partner.get_digital(DIGITAL_L1))
         {
             moveLauncher(-launcher_speed);
         }
@@ -163,16 +165,28 @@ void opcontrol()
         else
         {
             moveLauncher(0);
-        }
+        }}
+        */
+        
         if (partner.get_digital_new_press(DIGITAL_R1))
         {
             releaseLauncher();
+            //pros::delay(500);
+            //isLaunching = false;
         }
         if (partner.get_digital_new_press(DIGITAL_R2))
         {
+            //isLaunching = true;
             windUpLauncher();
         }
 
+        if (partner.get_digital_new_press(DIGITAL_DOWN)) {
+            resetLauncher();
+        }
+        if (partner.get_digital_new_press(DIGITAL_UP)) {
+            fowardPlough();
+        }
+        /*
         if (partner.get_digital_new_press(DIGITAL_UP))
         {
             int new_launcher_speed = launcher_speed + 10;
@@ -195,17 +209,14 @@ void opcontrol()
             partner.print(1, 1, "Launcher:%d", launcher_speed);
             std::cout << launcher_speed << "\n";
         }
+        */
         if (partner.get_digital(DIGITAL_LEFT))
         {
-            movePlough(50);
+            closePlough();
         }
         else if (partner.get_digital(DIGITAL_RIGHT))
         {
-            movePlough(-50);
-        }
-        else
-        {
-            movePlough(0);
+            openPlough();
         }
         if (partner.get_digital_new_press(DIGITAL_X))
         {
@@ -218,18 +229,20 @@ void opcontrol()
         if (debugMode == true) {
             if (partner.get_digital_new_press(DIGITAL_Y))
             {
-                right1Auton();
+                runSelectedAuton();
             }
         }
         if (partner.get_digital_new_press(DIGITAL_A)) {
+            isLaunching = true;
             do {
                 windUpLauncher();
-                pros::delay(2000);
+                pros::delay(1500);
                 releaseLauncher();
-                pros::delay(500);
-            } while (!partner.get_digital_new_press(DIGITAL_A));
+                pros::delay(1000);
+            } while (partner.get_digital(DIGITAL_A));
+            isLaunching = false;
         }
-        pros::delay(2);
+        pros::delay(20);
     }
 }
 

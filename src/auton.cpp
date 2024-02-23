@@ -13,16 +13,21 @@ std::function<void()> autonScripts[] = {
     right1Auton,
     left2Auton,
     right2Auton,
-    pushAuton};
+    pushAuton,
+    launchAuton,
+    matchLoadBarAuton
+    };
 
 std::vector<std::string> autonNames = {
     "Test Auton",
     "Spin Auton",
-    "Left1 Auton",
-    "Right1 Auton",
-    "Left2 Auton",
-    "Right2 Auton",
-    "Push Auton"
+    "Move Foward Auton",
+    "Basic Push Auton",
+    "Wind up Auton",
+    "Open Plough Auton",
+    "Push into goal Auton"
+    "Skills launch Auton"
+    "Scoop out corner Auton"
 };
 
 void swapAuton(int changeAmount)
@@ -99,10 +104,11 @@ void left1Auton()
     moveFor(500, NORTH, 127);
 }
 
+//front of back wheels against line
 void right1Auton()
 {
     moveFor(500, NORTH, 75);
-    moveFor(500, SOUTH, 75);
+    moveFor(1000, SOUTH, 75);
 }
 
 void left2Auton()
@@ -126,4 +132,26 @@ void pushAuton()
 {
     moveFor(3500, NORTH, 75);
     moveFor(1000, SOUTH, 75);
+}
+
+void launchAuton() {
+    int startTime = pros::millis();
+    while (pros::millis() - startTime < 55000) {  // Loop for 55 seconds
+        autoLaunch();
+        pros::delay(20);  // Delay to prevent starving other tasks
+    }
+    moveFor(3000, NORTH, 100);
+    moveFor(1000, SOUTH, 50);
+}
+
+void matchLoadBarAuton() {
+    moveFor(3000, SOUTH, 75);
+    moveFor(500, NORTH, 75);
+    moveFor(500, SOUTH, 75);
+    moveFor(500, NORTH, 75);
+    moveFor(1000, TURNLEFT, 50);
+    moveFor(1000, NORTH, 75);
+    openPlough();
+    moveFor(1000, SOUTH, 75);
+
 }

@@ -25,8 +25,8 @@ std::vector<std::string> autonNames = {
     "Basic Push Auton",
     "Wind up Auton",
     "Open Plough Auton",
-    "Push into goal Auton"
-    "Skills launch Auton"
+    "Push into goal Auton",
+    "Skills launch Auton",
     "Scoop out corner Auton"
 };
 

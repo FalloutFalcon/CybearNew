@@ -168,22 +168,22 @@ void opcontrol()
         }}
         */
         
-        if (partner.get_digital_new_press(DIGITAL_R1))
+        if (partner.get_digital_new_press(DIGITAL_R1) || master.get_digital_new_press(DIGITAL_A))
         {
             releaseLauncher();
             //pros::delay(500);
             //isLaunching = false;
         }
-        if (partner.get_digital_new_press(DIGITAL_R2))
+        if (partner.get_digital_new_press(DIGITAL_R2) || master.get_digital_new_press(DIGITAL_B))
         {
             //isLaunching = true;
             windUpLauncher();
         }
 
-        if (partner.get_digital_new_press(DIGITAL_DOWN)) {
+        if (partner.get_digital_new_press(DIGITAL_DOWN) || master.get_digital_new_press(DIGITAL_Y)) {
             resetLauncher();
         }
-        if (partner.get_digital_new_press(DIGITAL_UP)) {
+        if (partner.get_digital_new_press(DIGITAL_UP) || master.get_digital_new_press(DIGITAL_UP)) {
             fowardPlough();
         }
         /*
@@ -210,11 +210,11 @@ void opcontrol()
             std::cout << launcher_speed << "\n";
         }
         */
-        if (partner.get_digital(DIGITAL_LEFT))
+        if (partner.get_digital(DIGITAL_LEFT) || master.get_digital(DIGITAL_DOWN))
         {
             closePlough();
         }
-        else if (partner.get_digital(DIGITAL_RIGHT))
+        else if (partner.get_digital(DIGITAL_RIGHT) || master.get_digital(DIGITAL_RIGHT))
         {
             openPlough();
         }

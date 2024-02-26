@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "(goalpush)CybearBasil",
+        "project_name": "(masterController)CybearBasil",
         "target": "v5",
         "templates": {
             "kernel": {

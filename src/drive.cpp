@@ -85,7 +85,7 @@ void moveRelative(int frontLeftMove, int backLeftMove, int frontRightMove, int b
 void moveDistance(int distance, int direction, int speed)
 {
     //((WHEEL_DIAMETER * PI * GEAR RATIO * RPM) / 60 SECONDS) / 12 INCHES)
-    //diagonal feet / second.
+    // diagonal feet / second.
     distance = ((distance / (WHEEL_DIAMETER * M_PI)) * GREEN_ENCODER_UNITS);
     double hypotenuse = std::sqrt(2 / std::pow(distance, 2));
     switch (direction)
@@ -134,13 +134,15 @@ void moveDistanceWhile(int distance, int direction, int speed)
     } while (!allWheelsWithinTarget(5));
 }
 
-bool isWithinTarget(pros::Motor& wheel, double within) {
+bool isWithinTarget(pros::Motor &wheel, double within)
+{
     double position = wheel.get_position();
     double target = wheel.get_target_position();
     return position + within > target && position - within < target;
 }
 
-bool allWheelsWithinTarget(double within) {
+bool allWheelsWithinTarget(double within)
+{
     return isWithinTarget(front_left_wheel, within) &&
            isWithinTarget(back_left_wheel, within) &&
            isWithinTarget(front_right_wheel, within) &&

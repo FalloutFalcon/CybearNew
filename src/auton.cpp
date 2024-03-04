@@ -15,8 +15,7 @@ std::function<void()> autonScripts[] = {
     right2Auton,
     pushAuton,
     launchAuton,
-    matchLoadBarAuton
-    };
+    matchLoadBarAuton};
 
 std::vector<std::string> autonNames = {
     "Test Auton",
@@ -27,14 +26,13 @@ std::vector<std::string> autonNames = {
     "Open Plough Auton",
     "Push into goal Auton",
     "Skills launch Auton",
-    "Scoop out corner Auton"
-};
+    "Scoop out corner Auton"};
 
 void swapAuton(int changeAmount)
 {
     if (currentAutonIndex + changeAmount > 0 && currentAutonIndex + changeAmount < sizeof(autonScripts))
     {
-         currentAutonIndex = currentAutonIndex + changeAmount;
+        currentAutonIndex = currentAutonIndex + changeAmount;
     }
     else
     {
@@ -78,7 +76,7 @@ void testAuton()
     moveDistanceWhile(6, NORTHWEST, 50);
     /*
     while (true)
-    {   
+    {
         moveFor(1000, NORTH, 25);
         moveFor(1000, SOUTH, 25);
         moveFor(1000, EAST, 25);
@@ -104,7 +102,7 @@ void left1Auton()
     moveFor(500, NORTH, 127);
 }
 
-//front of back wheels against line
+// front of back wheels against line
 void right1Auton()
 {
     moveFor(500, NORTH, 75);
@@ -134,17 +132,20 @@ void pushAuton()
     moveFor(1000, SOUTH, 75);
 }
 
-void launchAuton() {
+void launchAuton()
+{
     int startTime = pros::millis();
-    while (pros::millis() - startTime < 55000) {  // Loop for 55 seconds
+    while (pros::millis() - startTime < 55000)
+    { // Loop for 55 seconds
         autoLaunch();
-        pros::delay(20);  // Delay to prevent starving other tasks
+        pros::delay(20); // Delay to prevent starving other tasks
     }
     moveFor(3000, NORTH, 100);
     moveFor(1000, SOUTH, 50);
 }
 
-void matchLoadBarAuton() {
+void matchLoadBarAuton()
+{
     moveFor(3000, SOUTH, 75);
     moveFor(500, NORTH, 75);
     moveFor(500, SOUTH, 75);
@@ -153,5 +154,4 @@ void matchLoadBarAuton() {
     moveFor(1000, NORTH, 75);
     openPlough();
     moveFor(1000, SOUTH, 75);
-
 }

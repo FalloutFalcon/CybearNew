@@ -1,7 +1,7 @@
 #ifndef _AUTON_HPP_
 #define _AUTON_HPP_
 
-#define DEFAULT_AUTON_INDEX 6
+#define DEFAULT_AUTON_INDEX 4
 #define TEST_AUTON 0
 #define SPIN_AUTON 1
 #define LEFT1_AUTON 2

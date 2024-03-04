@@ -26,7 +26,7 @@ void releaseLauncher()
     launcher_motor.move_relative(-28, launcher_speed);
 }
 
-//put the launcher to the number where  # % 360 = 0
+// put the launcher to the number where  # % 360 = 0
 void resetLauncher()
 {
     double launcherPos = launcher_motor.get_position();
@@ -45,9 +45,9 @@ void autoLaunch()
 {
     isLaunching = true;
     windUpLauncher();
-    pros::delay(1000);
+    pros::delay(750);
     releaseLauncher();
-    pros::delay(1000);
+    pros::delay(500);
     isLaunching = false;
 }
 
@@ -58,17 +58,18 @@ void movePlough(int power)
 
 void openPlough()
 {
-    //plough_motor.move(127);
+    // plough_motor.move(127);
     plough_motor.move_absolute(-90, 100);
 }
 
 void closePlough()
 {
-    //plough_motor.move(-127);
+    // plough_motor.move(-127);
     plough_motor.move_absolute(0, 100);
 }
 
-void fowardPlough() {
+void fowardPlough()
+{
     plough_motor.move_absolute(-180, 100);
 }
 

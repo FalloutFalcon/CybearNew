@@ -167,23 +167,25 @@ void opcontrol()
             moveLauncher(0);
         }}
         */
-        
+
         if (partner.get_digital_new_press(DIGITAL_R1) || master.get_digital_new_press(DIGITAL_A))
         {
             releaseLauncher();
-            //pros::delay(500);
-            //isLaunching = false;
+            // pros::delay(500);
+            // isLaunching = false;
         }
         if (partner.get_digital_new_press(DIGITAL_R2) || master.get_digital_new_press(DIGITAL_B))
         {
-            //isLaunching = true;
+            // isLaunching = true;
             windUpLauncher();
         }
 
-        if (partner.get_digital_new_press(DIGITAL_DOWN) || master.get_digital_new_press(DIGITAL_Y)) {
+        if (partner.get_digital_new_press(DIGITAL_DOWN) || master.get_digital_new_press(DIGITAL_Y))
+        {
             resetLauncher();
         }
-        if (partner.get_digital_new_press(DIGITAL_UP) || master.get_digital_new_press(DIGITAL_UP)) {
+        if (partner.get_digital_new_press(DIGITAL_UP) || master.get_digital_new_press(DIGITAL_UP))
+        {
             fowardPlough();
         }
         /*
@@ -226,15 +228,18 @@ void opcontrol()
         {
             swapAuton(-1);
         }
-        if (debugMode == true) {
+        if (debugMode == true)
+        {
             if (partner.get_digital_new_press(DIGITAL_Y))
             {
                 runSelectedAuton();
             }
         }
-        if (partner.get_digital_new_press(DIGITAL_A)) {
+        if (partner.get_digital_new_press(DIGITAL_A))
+        {
             isLaunching = true;
-            do {
+            do
+            {
                 windUpLauncher();
                 pros::delay(1500);
                 releaseLauncher();
